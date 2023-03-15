@@ -84,7 +84,7 @@ public:
 		}
 		case 2:
 		{
-			parser(settings->keyHandler(event));
+			parser(exit->keyHandler(event));
 			break;
 		}
 		}

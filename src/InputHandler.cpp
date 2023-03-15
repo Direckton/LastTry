@@ -18,6 +18,7 @@ int Input::keyHandler(sf::Event& event)
 	}
 	case sf::Keyboard::Left:
 	{
+		moveLeft();
 		return 0;
 
 		break;
