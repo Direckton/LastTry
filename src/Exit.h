@@ -14,4 +14,6 @@ public:
 	~Exit(){}
 	void draw(sf::RenderWindow& window);
 	void moveLeft();
+	void moveRight();
+	int getSelector();
 };

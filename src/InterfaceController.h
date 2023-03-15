@@ -13,6 +13,8 @@ class InterfaceController : public Menu, public Settings, public Input
 
 	int width, height; //h&w of the screen
 
+	bool close = false;
+
 public:
 	InterfaceController(int _width, int _height)
 	{
@@ -144,6 +146,31 @@ public:
 		}
 	}
 
+	bool updateClose()
+	{
+		return close;
+	}
+
+	void exitSelections()
+	{
+		switch (exit->getSelector())
+		{
+		case 0:
+		{
+			close = true;
+			break;
+		}
+		case 1:
+		{
+			interface = 0;
+
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 	void select()
 	{
 		switch (interface)
@@ -153,6 +180,17 @@ public:
 			menuSelection();
 			break;
 		}
+		case 1:
+		{
+			//setting selections
+			break;
+		}
+		case 2:
+		{
+			//exit selections
+			exitSelections();
+
+		}
 		default:
 			break;
 		}
@@ -161,6 +199,12 @@ public:
 	void menuBack()
 	{
 		//go to exit
+		if (exit == nullptr)
+		{
+			exit = new Exit(width, height);
+		}
+		interface = 2;
+
 	}
 
 	void goBackToMenu()
@@ -169,7 +213,7 @@ public:
 		//delete settings;
 		if (menu == nullptr)
 		{
-			menu = new Menu(height, width);
+			menu = new Menu(width, height);
 		}
 		interface = 0;
 	}
@@ -182,7 +226,7 @@ public:
 		{
 		case 0:
 		{
-			//menuSelection();
+			menuBack();
 			break;
 		}
 		case 1:

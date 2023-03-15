@@ -25,6 +25,7 @@ int Input::keyHandler(sf::Event& event)
 	}
 	case sf::Keyboard::Right:
 	{
+		moveRight();
 		return 0;
 
 		break;

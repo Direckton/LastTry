@@ -65,3 +65,18 @@ void Exit::moveLeft()
 
 	}
 }
+
+void Exit::moveRight()
+{
+	if (selector < OPTIONS-1)
+	{
+		selector++;
+		cursor.setPosition(sf::Vector2f(options[selector].getGlobalBounds().left, options[selector].getPosition().y + 10));
+
+	}
+}
+
+int Exit::getSelector()
+{
+	return selector;
+}

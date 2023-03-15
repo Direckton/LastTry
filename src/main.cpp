@@ -46,7 +46,11 @@ int main()
         }
 
         //Update
-
+        if (controller.updateClose())
+        {
+            //TODO closing procedure: saving progress etc and replace close()
+            window.close();
+        }
 
         //Render
         controller.render(window);
