@@ -3,6 +3,7 @@
 #include "Menu.h"
 #include "Settings.h"
 #include "Exit.h"
+#include <iostream>
 
 class InterfaceController : public Menu, public Settings, public Input
 {
@@ -63,6 +64,21 @@ public:
 		case 2:
 		{
 			this->back();
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	void mouseInput(sf::Event& event)
+	{
+		switch (interface)
+		{
+		case 1:
+		{
+			//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
+			settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y);
 			break;
 		}
 		default:

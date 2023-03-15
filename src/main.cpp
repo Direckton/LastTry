@@ -14,11 +14,9 @@ using namespace sf;
 int main()
 {
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash");
-    RectangleShape shape(Vector2f(100,100));
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
 
-    shape.setFillColor(Color::Magenta);
 
 	while (window.isOpen())
 	{
@@ -38,6 +36,12 @@ int main()
                 controller.input(event);
                 break;
 
+            }
+            case sf::Event::MouseMoved:
+            {
+                //might tank preformence
+                controller.mouseInput(event);
+                break;
             }
             default:
                 break;
