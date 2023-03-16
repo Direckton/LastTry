@@ -17,6 +17,8 @@ int main()
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
 
+    bool mouseTrack = false;
+
 
 	while (window.isOpen())
 	{
@@ -37,10 +39,16 @@ int main()
                 break;
 
             }
-            case sf::Event::MouseMoved:
+            case sf::Event::MouseButtonPressed:
             {
+                mouseTrack = true;
                 //might tank preformence
-                controller.mouseInput(event);
+                break;
+            }
+            case sf::Event::MouseButtonReleased:
+            {
+                mouseTrack = false;
+                //might tank preformence
                 break;
             }
             default:
@@ -49,11 +57,18 @@ int main()
             
         }
 
+
         //Update
         if (controller.updateClose())
         {
             //TODO closing procedure: saving progress etc and replace close()
             window.close();
+        }
+
+        if (mouseTrack)
+        {
+            controller.mouseInput(event);
+
         }
 
         //Render

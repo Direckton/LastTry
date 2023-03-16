@@ -14,6 +14,8 @@ class InterfaceController : public Menu, public Settings, public Input
 
 	int width, height; //h&w of the screen
 
+
+
 	bool close = false;
 
 public:
@@ -22,6 +24,7 @@ public:
 		width = _width;
 		height = _height;
 		interface = 0;
+
 
 		switch (interface)
 		{
@@ -77,7 +80,8 @@ public:
 		{
 		case 1:
 		{
-			//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
+			
+			std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
 			settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y);
 			break;
 		}
