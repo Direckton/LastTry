@@ -36,7 +36,31 @@ Settings::~Settings()
 
 }
 
-void Settings::changeCirclePosition(int x, int y)
+void Settings::activateSlider(sf::RenderWindow &window)
+{
+	//std::cout << circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) << std::endl;
+	if (circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	{
+		sliderActive = true;
+		
+	}
+	//sliderActive = false;
+	
+}
+
+
+
+void Settings::deactivateSlider()
+{
+	sliderActive = false;
+}
+
+bool Settings::getSliderStatus()
+{
+	return sliderActive;
+}
+
+void Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 {
 
 	left.setFillColor(sf::Color::White);
@@ -49,8 +73,7 @@ void Settings::changeCirclePosition(int x, int y)
 	std::cout << circle.getPosition().x<< std::endl;
 	if (x > SLIDER_BOUNDS && x < width - SLIDER_BOUNDS)
 	{
-		if (x > circle.getPosition().x - circle.getRadius() &&
-			x < circle.getPosition().x + circle.getGlobalBounds().width)
+		//if ()
 		{
 			circle.setPosition(x, circle.getPosition().y);
 

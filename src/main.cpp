@@ -48,6 +48,7 @@ int main()
             case sf::Event::MouseButtonReleased:
             {
                 mouseTrack = false;
+                controller.mouseDeactivate();
                 //might tank preformence
                 break;
             }
@@ -67,7 +68,8 @@ int main()
 
         if (mouseTrack)
         {
-            controller.mouseInput(event);
+            controller.mouseInput(event, window);
+
 
         }
 

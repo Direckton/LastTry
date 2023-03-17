@@ -13,7 +13,7 @@ private:
 	sf::RectangleShape bar;
 	int width;
 
-	std::vector<sf::Vector2f> boundingBox;
+	bool sliderActive = false;
 	
 public:
 	Settings(){}
@@ -21,7 +21,9 @@ public:
 	~Settings();
 
 	void draw(sf::RenderWindow& window);
-	void changeCirclePosition(int x, int y);
+	void changeCirclePosition(int x, int y, sf::RenderWindow& window);
 	void checkForBounds();
-
+	void activateSlider(sf::RenderWindow& window);
+	void deactivateSlider();
+	bool getSliderStatus();
 };

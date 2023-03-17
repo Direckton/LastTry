@@ -74,15 +74,37 @@ public:
 		}
 	}
 
-	void mouseInput(sf::Event& event)
+	void mouseInput(sf::Event& event, sf::RenderWindow &window)
 	{
 		switch (interface)
 		{
 		case 1:
 		{
-			
-			std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
-			settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y);
+			if (!settings->getSliderStatus())
+			{
+				settings->activateSlider(window);
+			}
+			if(settings->getSliderStatus())
+			{
+				std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
+				settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
+
+			}
+
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	void mouseDeactivate()
+	{
+		switch (interface)
+		{
+		case 1:
+		{
+			settings->deactivateSlider();
 			break;
 		}
 		default:
