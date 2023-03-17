@@ -10,7 +10,7 @@ private:
 	sf::Text title, left, right;
 	sf::Font font;
 	sf::CircleShape circle;
-	sf::RectangleShape bar;
+	sf::RectangleShape bar ,progress;
 	int width;
 
 	bool sliderActive = false;

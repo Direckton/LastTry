@@ -86,7 +86,7 @@ public:
 			}
 			if(settings->getSliderStatus())
 			{
-				std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
+				//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
 				settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
 
 			}
