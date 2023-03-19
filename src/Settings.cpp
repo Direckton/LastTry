@@ -101,3 +101,17 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(title);
 	window.draw(circle);
 }
+
+Checkbox::Checkbox(bool _check)
+{
+	check = _check;
+	box.setSize(sf::Vector2f(100, 100));
+	box.setFillColor(sf::Color::Transparent);
+	box.setOutlineThickness(5);
+	box.setOutlineColor(sf::Color::White);
+}
+
+void Checkbox::draw(sf::RenderWindow& window)
+{
+	window.draw(box);
+}

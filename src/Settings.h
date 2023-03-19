@@ -4,7 +4,7 @@
 
 #define SLIDER_BOUNDS 200
 
-class Settings : public Input
+class Settings : public Input, public Checkbox
 {
 private:
 	sf::Text title, left, right;
@@ -26,4 +26,21 @@ public:
 	void activateSlider(sf::RenderWindow& window);
 	void deactivateSlider();
 	bool getSliderStatus();
+};
+
+class Slider
+{
+	//TODO move slider into this object
+};
+
+class Checkbox
+{
+protected:
+	sf::RectangleShape box;
+	bool check;
+public:
+	Checkbox(bool _check);
+	~Checkbox() {};
+	
+	void draw(sf::RenderWindow& window);
 };
