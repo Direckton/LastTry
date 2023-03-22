@@ -4,6 +4,26 @@
 
 #define SLIDER_BOUNDS 200
 
+
+class Checkbox
+{
+protected:
+	sf::RectangleShape box;
+	sf::Texture t_tick;
+	sf::Image i_tick;
+	sf::Sprite s_tick;
+
+	bool check;
+public:
+	Checkbox() {}
+	Checkbox(bool _check);
+	~Checkbox() {};
+
+	void draw(sf::RenderWindow& window);
+
+	void setPosition(int x, int y);
+};
+
 class Settings : public Input, public Checkbox
 {
 private:
@@ -11,6 +31,8 @@ private:
 	sf::Font font;
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
+
+	Checkbox checkbox1;
 	int width;
 
 	bool sliderActive = false;
@@ -31,16 +53,4 @@ public:
 class Slider
 {
 	//TODO move slider into this object
-};
-
-class Checkbox
-{
-protected:
-	sf::RectangleShape box;
-	bool check;
-public:
-	Checkbox(bool _check);
-	~Checkbox() {};
-	
-	void draw(sf::RenderWindow& window);
 };

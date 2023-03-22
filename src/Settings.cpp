@@ -3,6 +3,8 @@
 
 Settings::Settings(int _width, int _hight)
 {
+	checkbox1 = new Checkbox(true);
+	checkbox1.setPosition(200, 400);
 	width = _width;
 	if (!font.loadFromFile("OXYGENE1.ttf"))
 	{
@@ -97,7 +99,7 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(right);
 	window.draw(bar);
 	window.draw(progress);
-
+	checkbox1.draw(window);
 	window.draw(title);
 	window.draw(circle);
 }
@@ -105,13 +107,31 @@ void Settings::draw(sf::RenderWindow& window)
 Checkbox::Checkbox(bool _check)
 {
 	check = _check;
-	box.setSize(sf::Vector2f(100, 100));
+	box.setSize(sf::Vector2f(25, 25));
 	box.setFillColor(sf::Color::Transparent);
 	box.setOutlineThickness(5);
 	box.setOutlineColor(sf::Color::White);
+
+	if(!t_tick.loadFromFile("res/tick.png"))
+	{
+		std::cerr<<"Loding file did not succed" << std::endl;
+	}
+	if (!i_tick.loadFromFile("res/tick.png"))
+	{
+		std::cerr << "Loding file did not succed" << std::endl;
+	}
+	t_tick.loadFromImage(i_tick);
+	s_tick.setTexture(t_tick);
+	s_tick.setScale(sf::Vector2f(0.2, 0.2));
 }
 
 void Checkbox::draw(sf::RenderWindow& window)
 {
 	window.draw(box);
+	window.draw(s_tick);
+}
+
+void Checkbox::setPosition(int _x, int _y)
+{
+	box.setPosition(_x, _y);
 }
