@@ -19,6 +19,10 @@ int main()
 
     bool mouseTrack = false;
 
+    //sf::Texture tx;
+    //tx.loadFromFile("res/tick.png");
+    //sf::Sprite sp;
+    //sp.setTexture(tx);
 
 	while (window.isOpen())
 	{
@@ -75,6 +79,7 @@ int main()
 
         //Render
         controller.render(window);
+        //window.draw(sp);
         window.display();
 	}
 

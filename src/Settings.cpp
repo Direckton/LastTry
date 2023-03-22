@@ -2,8 +2,7 @@
 
 
 Settings::Settings(int _width, int _hight)
-{
-	checkbox1 = new Checkbox(true);
+{	
 	checkbox1.setPosition(200, 400);
 	width = _width;
 	if (!font.loadFromFile("OXYGENE1.ttf"))
@@ -20,8 +19,6 @@ Settings::Settings(int _width, int _hight)
 	bar.setFillColor(sf::Color::White);
 	bar.setPosition(SLIDER_BOUNDS, 200);
 
-
-	
 	circle.setRadius(15);
 	circle.setPointCount(20);
 	circle.setFillColor(sf::Color::Green);
@@ -42,6 +39,23 @@ Settings::~Settings()
 
 }
 
+void Settings::checkForBounds(sf::RenderWindow &window)
+{
+	if (checkbox1.getShape().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	{
+		if (checkbox1.getStatus())
+		{
+			checkbox1.setStatus(false);
+
+		}
+		else
+		{
+			checkbox1.setStatus(true);
+
+		}
+	}
+}
+
 void Settings::activateSlider(sf::RenderWindow &window)
 {
 	//std::cout << circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) << std::endl;
@@ -53,6 +67,7 @@ void Settings::activateSlider(sf::RenderWindow &window)
 	//sliderActive = false;
 	
 }
+
 
 
 
@@ -104,34 +119,56 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(circle);
 }
 
-Checkbox::Checkbox(bool _check)
+Checkbox::Checkbox()
 {
-	check = _check;
 	box.setSize(sf::Vector2f(25, 25));
 	box.setFillColor(sf::Color::Transparent);
-	box.setOutlineThickness(5);
+	box.setOutlineThickness(3);
 	box.setOutlineColor(sf::Color::White);
 
-	if(!t_tick.loadFromFile("res/tick.png"))
+	if (!t_tick.loadFromFile("tick.png"))
 	{
-		std::cerr<<"Loding file did not succed" << std::endl;
+		std::cout << "Loding file did not succed" << std::endl;
 	}
-	if (!i_tick.loadFromFile("res/tick.png"))
-	{
-		std::cerr << "Loding file did not succed" << std::endl;
-	}
-	t_tick.loadFromImage(i_tick);
+	t_tick.setSmooth(true);
+
 	s_tick.setTexture(t_tick);
-	s_tick.setScale(sf::Vector2f(0.2, 0.2));
+	s_tick.setScale(sf::Vector2f(0.07, 0.07));
+	
+}
+
+
+void Checkbox::setSprite(sf::Texture& tx)
+{
+	s_tick.setTexture(tx);
 }
 
 void Checkbox::draw(sf::RenderWindow& window)
 {
 	window.draw(box);
-	window.draw(s_tick);
+	if (check)
+	{
+		window.draw(s_tick);
+
+	}
 }
 
 void Checkbox::setPosition(int _x, int _y)
 {
 	box.setPosition(_x, _y);
+	s_tick.setPosition(_x-20, _y-20);
+}
+
+void Checkbox::setStatus(bool state)
+{
+	check = state;
+}
+bool Checkbox::getStatus()
+{
+	return check;
+}
+
+sf::RectangleShape Checkbox::getShape()
+{
+	return box;
 }

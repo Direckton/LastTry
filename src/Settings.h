@@ -10,17 +10,19 @@ class Checkbox
 protected:
 	sf::RectangleShape box;
 	sf::Texture t_tick;
-	sf::Image i_tick;
 	sf::Sprite s_tick;
 
-	bool check;
+	bool check = true;
 public:
-	Checkbox() {}
-	Checkbox(bool _check);
+	Checkbox();
 	~Checkbox() {};
 
 	void draw(sf::RenderWindow& window);
+	void setSprite(sf::Texture& tx);
+	void setStatus(bool state);
+	bool getStatus();
 
+	sf::RectangleShape getShape();
 	void setPosition(int x, int y);
 };
 
@@ -44,10 +46,12 @@ public:
 
 	void draw(sf::RenderWindow& window);
 	void changeCirclePosition(int x, int y, sf::RenderWindow& window);
-	void checkForBounds();
+	void checkForBounds(sf::RenderWindow& window);
 	void activateSlider(sf::RenderWindow& window);
 	void deactivateSlider();
 	bool getSliderStatus();
+
+
 };
 
 class Slider

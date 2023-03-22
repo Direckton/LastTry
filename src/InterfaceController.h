@@ -90,6 +90,7 @@ public:
 				settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
 
 			}
+			settings->checkForBounds(window);
 
 			break;
 		}
