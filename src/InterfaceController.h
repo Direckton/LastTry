@@ -106,6 +106,7 @@ public:
 		case 1:
 		{
 			settings->deactivateSlider();
+			settings->deactivateClick();
 			break;
 		}
 		default:

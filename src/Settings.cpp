@@ -3,8 +3,15 @@
 
 Settings::Settings(int _width, int _hight)
 {	
-	checkbox1.setPosition(200, 400);
 	width = _width;
+	for (int i = 0; i < 3; i++)
+	{
+		checkbox.push_back(Checkbox(ch));
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		checkbox[i].setPosition(width / 3 * i + SLIDER_BOUNDS, 450);
+	}
 	if (!font.loadFromFile("OXYGENE1.ttf"))
 	{
 		std::cout << "Error while loading font!";
@@ -41,17 +48,23 @@ Settings::~Settings()
 
 void Settings::checkForBounds(sf::RenderWindow &window)
 {
-	if (checkbox1.getShape().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	for (int i = 0; i < 3; i++)
 	{
-		if (checkbox1.getStatus())
-		{
-			checkbox1.setStatus(false);
 
-		}
-		else
+		if (checkbox[i].getShape().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
+			&& !changeState)
 		{
-			checkbox1.setStatus(true);
+			changeState = true;
+			if (checkbox[i].getStatus())
+			{
+				checkbox[i].setStatus(false);
 
+			}
+			else
+			{
+				checkbox[i].setStatus(true);
+
+			}
 		}
 	}
 }
@@ -69,6 +82,10 @@ void Settings::activateSlider(sf::RenderWindow &window)
 }
 
 
+void Settings::deactivateClick()
+{
+	changeState = false;
+}
 
 
 void Settings::deactivateSlider()
@@ -114,7 +131,11 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(right);
 	window.draw(bar);
 	window.draw(progress);
-	checkbox1.draw(window);
+	for (int i = 0; i < 3; i++)
+	{
+		checkbox[i].draw(window);
+
+	}
 	window.draw(title);
 	window.draw(circle);
 }
@@ -126,7 +147,7 @@ Checkbox::Checkbox()
 	box.setOutlineThickness(3);
 	box.setOutlineColor(sf::Color::White);
 
-	if (!t_tick.loadFromFile("tick.png"))
+	if (!t_tick.loadFromFile("res/tick.png"))
 	{
 		std::cout << "Loding file did not succed" << std::endl;
 	}
@@ -156,7 +177,7 @@ void Checkbox::draw(sf::RenderWindow& window)
 void Checkbox::setPosition(int _x, int _y)
 {
 	box.setPosition(_x, _y);
-	s_tick.setPosition(_x-20, _y-20);
+	s_tick.setPosition(_x - TICK_OFFSET, _y - TICK_OFFSET);
 }
 
 void Checkbox::setStatus(bool state)

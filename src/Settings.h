@@ -4,6 +4,8 @@
 
 #define SLIDER_BOUNDS 200
 
+#define TICK_OFFSET 10
+
 
 class Checkbox
 {
@@ -12,9 +14,16 @@ protected:
 	sf::Texture t_tick;
 	sf::Sprite s_tick;
 
+
 	bool check = true;
 public:
 	Checkbox();
+	Checkbox(const Checkbox& _checkbox)
+	{
+		box = _checkbox.box;
+		t_tick = _checkbox.t_tick;
+		s_tick = _checkbox.s_tick;
+	}
 	~Checkbox() {};
 
 	void draw(sf::RenderWindow& window);
@@ -34,10 +43,13 @@ private:
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
 
-	Checkbox checkbox1;
+	Checkbox ch;
+
+	std::vector<Checkbox> checkbox;
 	int width;
 
 	bool sliderActive = false;
+	bool changeState = false;
 	
 public:
 	Settings(){}
@@ -50,6 +62,7 @@ public:
 	void activateSlider(sf::RenderWindow& window);
 	void deactivateSlider();
 	bool getSliderStatus();
+	void deactivateClick();
 
 
 };
