@@ -2,7 +2,7 @@
 #include "InputHandler.h"
 #include "Menu.h"
 #include "InterfaceController.h"
-//#include "Music.h"
+#include "Music.h"
 #include <iostream>
 
 #include <SFML/Audio.hpp>
@@ -19,18 +19,9 @@ int main()
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash");
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
-    //MusicControler music;
+    SoundControler music;
 
-    Music song;
-    if (!song.openFromFile("res/sounds/Sweden.wav"));
-    {
-        //apparentyly sfml thinks true==false
-        // that was fun to debug
-        //return -1;
-    }
-
-    song.play();
-
+ 
     bool mouseTrack = false;
 
     //sf::Texture tx;
