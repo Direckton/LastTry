@@ -22,9 +22,11 @@ int main()
     //MusicControler music;
 
     Music song;
-    if (!song.openFromFile("res/sounds/Sweden.ogg"));
+    if (!song.openFromFile("res/sounds/Sweden.wav"));
     {
-        return -1;
+        //apparentyly sfml thinks true==false
+        // that was fun to debug
+        //return -1;
     }
 
     song.play();
