@@ -111,13 +111,8 @@ void Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 	//std::cout << circle.getPosition().x<< std::endl;
 	if (x > SLIDER_BOUNDS && x < width - SLIDER_BOUNDS)
 	{
-		//if ()
-		{
-			circle.setPosition(x, circle.getPosition().y);
-			progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
-
-		}
-
+		circle.setPosition(x, circle.getPosition().y);
+		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
 	}
 	//circle.getGlobalBounds()
 }

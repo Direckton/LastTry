@@ -2,7 +2,10 @@
 #include "InputHandler.h"
 #include "Menu.h"
 #include "InterfaceController.h"
+//#include "Music.h"
 #include <iostream>
+
+#include <SFML/Audio.hpp>
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -16,6 +19,15 @@ int main()
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash");
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
+    //MusicControler music;
+
+    Music song;
+    if (!song.openFromFile("res/sounds/Sweden.ogg"));
+    {
+        return -1;
+    }
+
+    song.play();
 
     bool mouseTrack = false;
 
