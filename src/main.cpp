@@ -21,7 +21,10 @@ int main()
     InterfaceController controller(WIDTH,HEIGHT);
     SoundControler music;
 
- 
+    music.playMusic("res/sounds/Sweden.wav");
+
+    
+
     bool mouseTrack = false;
 
     //sf::Texture tx;
@@ -52,6 +55,7 @@ int main()
             {
                 mouseTrack = true;
                 //might tank preformence
+                
                 break;
             }
             case sf::Event::MouseButtonReleased:
@@ -59,6 +63,7 @@ int main()
                 mouseTrack = false;
                 controller.mouseDeactivate();
                 //might tank preformence
+                
                 break;
             }
             default:
@@ -79,8 +84,9 @@ int main()
         {
             controller.mouseInput(event, window);
 
-
+            music.setMusicVolume(controller.updateVolume());
         }
+        
 
         //Render
         controller.render(window);

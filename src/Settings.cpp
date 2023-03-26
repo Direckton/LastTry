@@ -22,6 +22,19 @@ Settings::Settings(int _width, int _hight)
 	title.setString("SETTINGS");
 	title.setPosition(width / 2 - title.getGlobalBounds().width / 2, 20);
 
+	volume.setFont(font);
+	volume.setFillColor(sf::Color::White);
+	volume.setCharacterSize(40);
+	volume.setString("VOLUME: ");
+	volume.setPosition(width / 2 - volume.getGlobalBounds().width / 2, 100);
+
+	volumeValue.setFont(font);
+	volumeValue.setFillColor(sf::Color::White);
+	volumeValue.setCharacterSize(40);
+	volumeValue.setString("50");
+	volumeValue.setPosition(volume.getPosition().x + volume.getGlobalBounds().width, 100);
+
+
 	bar.setSize(sf::Vector2f(width - 2*SLIDER_BOUNDS,10));
 	bar.setFillColor(sf::Color::White);
 	bar.setPosition(SLIDER_BOUNDS, 200);
@@ -98,7 +111,7 @@ bool Settings::getSliderStatus()
 	return sliderActive;
 }
 
-void Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
+int Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 {
 
 	//left.setFillColor(sf::Color::White);
@@ -109,12 +122,19 @@ void Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 	//right.setString(std::to_string(circle.getPosition().x+ circle.getGlobalBounds().width));
 	//right.setPosition(1000, 500);
 	//std::cout << circle.getPosition().x<< std::endl;
-	if (x > SLIDER_BOUNDS && x < width - SLIDER_BOUNDS)
+	int zero = SLIDER_BOUNDS;
+	int full = width - SLIDER_BOUNDS;
+	int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+
+	if (x > SLIDER_BOUNDS && x < full)
 	{
 		circle.setPosition(x, circle.getPosition().y);
 		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
+		volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+		volumeValue.setString(std::to_string(volume));
 	}
-	//circle.getGlobalBounds()
+	
+	return volume;
 }
 
 
@@ -122,6 +142,8 @@ void Settings::draw(sf::RenderWindow& window)
 {
 	window.clear();
 
+	window.draw(volume);
+	window.draw(volumeValue);
 	window.draw(left);
 	window.draw(right);
 	window.draw(bar);

@@ -38,7 +38,7 @@ public:
 class Settings : public Input, public Checkbox
 {
 private:
-	sf::Text title, left, right;
+	sf::Text title, left, right, volume, volumeValue;
 	sf::Font font;
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
@@ -57,7 +57,7 @@ public:
 	~Settings();
 
 	void draw(sf::RenderWindow& window);
-	void changeCirclePosition(int x, int y, sf::RenderWindow& window);
+	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
 	void checkForBounds(sf::RenderWindow& window);
 	void activateSlider(sf::RenderWindow& window);
 	void deactivateSlider();

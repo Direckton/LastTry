@@ -14,6 +14,8 @@ class InterfaceController : public Menu, public Settings, public Input
 
 	int width, height; //h&w of the screen
 
+	int volume;
+
 
 
 	bool close = false;
@@ -87,7 +89,7 @@ public:
 			if(settings->getSliderStatus())
 			{
 				//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
-				settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
+				volume = settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
 
 			}
 			settings->checkForBounds(window);
@@ -97,6 +99,11 @@ public:
 		default:
 			break;
 		}
+	}
+	
+	int updateVolume()
+	{
+		return volume;
 	}
 
 	void mouseDeactivate()
