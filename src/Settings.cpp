@@ -59,7 +59,16 @@ Settings::~Settings()
 
 }
 
-void Settings::checkForBounds(sf::RenderWindow &window)
+bool Settings::getCheckboxStatus(int i)
+{
+	return checkbox[i].getStatus();
+}
+void Settings::setCheckboxStatus(int i, bool state)
+{
+	checkbox[i].setStatus(state);
+}
+
+int Settings::checkForBounds(sf::RenderWindow &window)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -78,8 +87,10 @@ void Settings::checkForBounds(sf::RenderWindow &window)
 				checkbox[i].setStatus(true);
 
 			}
+			return i;
 		}
 	}
+	return -1;
 }
 
 void Settings::activateSlider(sf::RenderWindow &window)
@@ -109,6 +120,11 @@ void Settings::deactivateSlider()
 bool Settings::getSliderStatus()
 {
 	return sliderActive;
+}
+
+sf::Vector2f Settings::getCirclePosition()
+{
+	return circle.getPosition();
 }
 
 int Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)

@@ -15,6 +15,7 @@ class InterfaceController : public Menu, public Settings, public Input
 	int width, height; //h&w of the screen
 
 	int volume;
+	bool mute = false;
 
 
 
@@ -76,6 +77,30 @@ public:
 		}
 	}
 
+	void handleCheckbox(int checkbox)
+	{
+		switch (checkbox)
+		{
+		case 0:
+		{
+			//mute
+			break;
+		}
+		case 1:
+		{
+			//mute sfx
+			break;
+		}
+		case 2:
+		{
+			//automatic replay
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 	void mouseInput(sf::Event& event, sf::RenderWindow &window)
 	{
 		switch (interface)
@@ -90,9 +115,10 @@ public:
 			{
 				//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
 				volume = settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
-
+				settings->setCheckboxStatus(1, true);
 			}
-			settings->checkForBounds(window);
+
+			handleCheckbox(settings->checkForBounds(window));
 
 			break;
 		}
@@ -100,7 +126,8 @@ public:
 			break;
 		}
 	}
-	
+
+
 	int updateVolume()
 	{
 		return volume;

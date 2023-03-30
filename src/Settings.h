@@ -58,12 +58,14 @@ public:
 
 	void draw(sf::RenderWindow& window);
 	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
-	void checkForBounds(sf::RenderWindow& window);
+	int checkForBounds(sf::RenderWindow& window);
 	void activateSlider(sf::RenderWindow& window);
 	void deactivateSlider();
 	bool getSliderStatus();
 	void deactivateClick();
-
+	bool getCheckboxStatus(int i);
+	void setCheckboxStatus(int i, bool state);
+	sf::Vector2f getCirclePosition();
 
 };
 

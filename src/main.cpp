@@ -85,6 +85,7 @@ int main()
             controller.mouseInput(event, window);
 
             music.setMusicVolume(controller.updateVolume());
+
         }
         
 
