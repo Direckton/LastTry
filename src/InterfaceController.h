@@ -109,7 +109,7 @@ public:
 		{
 			if (!settings->getSliderStatus())
 			{
-				settings->activateSlider(window);
+				settings->activateSlider(window); // checks if cursor is in bounds of a slider
 			}
 			if(settings->getSliderStatus())
 			{
@@ -117,6 +117,7 @@ public:
 				volume = settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
 				settings->setCheckboxStatus(1, true);
 			}
+			if(settings)
 
 			handleCheckbox(settings->checkForBounds(window));
 

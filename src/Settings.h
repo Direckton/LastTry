@@ -35,7 +35,34 @@ public:
 	void setPosition(int x, int y);
 };
 
-class Settings : public Input, public Checkbox
+class Slider
+{
+	//TODO move slider into this object
+protected:
+	sf::CircleShape circle;
+	sf::RectangleShape bar, progress;
+
+	int width, height; //window size
+	int x, y; //x and y coordinates of the slider
+
+	bool sliderActive = false;
+
+public:
+	Slider() {};
+	Slider(int _width, int _height, int _y);
+	~Slider(){}
+
+	void draw(sf::RenderWindow& window);
+	void activateSlider(sf::RenderWindow& window);
+	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
+	sf::Vector2f getCirclePosition();
+	bool getSliderStatus();
+	void deactivateSlider();
+
+};
+
+
+class Settings : public Input, public Checkbox, public Slider
 {
 private:
 	sf::Text title, left, right, volume, volumeValue;
@@ -46,6 +73,8 @@ private:
 	Checkbox ch;
 
 	std::vector<Checkbox> checkbox;
+
+	Slider sfxSlider;
 	int width;
 
 	bool sliderActive = false;
@@ -69,7 +98,3 @@ public:
 
 };
 
-class Slider
-{
-	//TODO move slider into this object
-};

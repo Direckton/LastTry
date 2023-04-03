@@ -12,6 +12,9 @@ Settings::Settings(int _width, int _hight)
 	{
 		checkbox[i].setPosition(width / 3 * i + SLIDER_BOUNDS, 450);
 	}
+	
+	sfxSlider = Slider(width, _hight, 300);
+
 	if (!font.loadFromFile("OXYGENE1.ttf"))
 	{
 		std::cout << "Error while loading font!";
@@ -164,6 +167,7 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(right);
 	window.draw(bar);
 	window.draw(progress);
+	sfxSlider.draw(window);
 	for (int i = 0; i < 3; i++)
 	{
 		checkbox[i].draw(window);
@@ -225,4 +229,82 @@ bool Checkbox::getStatus()
 sf::RectangleShape Checkbox::getShape()
 {
 	return box;
+}
+
+Slider::Slider(int _width, int _height, int _y)
+{
+	width = _width;
+	height = _height;
+	y = _y;
+	bar.setSize(sf::Vector2f(width - 2 * SLIDER_BOUNDS, 10));
+	bar.setFillColor(sf::Color::White);
+	bar.setPosition(SLIDER_BOUNDS, y);
+
+	circle.setRadius(15);
+	circle.setPointCount(20);
+	circle.setFillColor(sf::Color::Green);
+	circle.setOutlineThickness(3);
+	circle.setOutlineColor(sf::Color::White);
+	circle.setPosition(width / 2, y);
+	circle.setOrigin(circle.getRadius() / 2, circle.getRadius() / 2);
+
+	progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
+	progress.setFillColor(sf::Color(3, 252, 248, 100));
+	progress.setPosition(bar.getPosition());
+}
+
+void Slider::activateSlider(sf::RenderWindow& window)
+{
+	if (circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	{
+		sliderActive = true;
+	}
+}
+
+void Slider::deactivateSlider()
+{
+	sliderActive = false;
+}
+
+bool Slider::getSliderStatus()
+{
+	return sliderActive;
+}
+
+sf::Vector2f Slider::getCirclePosition()
+{
+	return circle.getPosition();
+}
+
+int Slider::changeCirclePosition(int x, int y, sf::RenderWindow& window)
+{
+
+	//left.setFillColor(sf::Color::White);
+	//left.setString(std::to_string(circle.getPosition().x));
+	//left.setPosition(200, 500);
+
+	//right.setFillColor(sf::Color::White);
+	//right.setString(std::to_string(circle.getPosition().x+ circle.getGlobalBounds().width));
+	//right.setPosition(1000, 500);
+	//std::cout << circle.getPosition().x<< std::endl;
+	int zero = SLIDER_BOUNDS;
+	int full = width - SLIDER_BOUNDS;
+	int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+
+	if (x > SLIDER_BOUNDS && x < full)
+	{
+		circle.setPosition(x, circle.getPosition().y);
+		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
+		volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+		volumeValue.setString(std::to_string(volume));
+	}
+
+	return volume;
+}
+
+void Slider::draw(sf::RenderWindow &window)
+{
+	window.draw(bar);
+	window.draw(progress);
+	window.draw(circle);
 }
