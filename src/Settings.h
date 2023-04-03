@@ -74,13 +74,15 @@ private:
 
 	std::vector<Checkbox> checkbox;
 
-	Slider sfxSlider;
 	int width;
 
 	bool sliderActive = false;
 	bool changeState = false;
 	
 public:
+
+	Slider sfxSlider;
+
 	Settings(){}
 	Settings(int _width, int _hight);
 	~Settings();
