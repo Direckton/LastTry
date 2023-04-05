@@ -96,16 +96,16 @@ int Settings::checkForBounds(sf::RenderWindow &window)
 	return -1;
 }
 
-void Settings::activateSlider(sf::RenderWindow &window)
+bool Settings::activateSlider(sf::RenderWindow &window)
 {
 	//std::cout << circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) << std::endl;
 	if (circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 	{
 		sliderActive = true;
-		
+		return true;
 	}
 	//sliderActive = false;
-	
+	return false;
 }
 
 
@@ -279,14 +279,6 @@ sf::Vector2f Slider::getCirclePosition()
 int Slider::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 {
 
-	//left.setFillColor(sf::Color::White);
-	//left.setString(std::to_string(circle.getPosition().x));
-	//left.setPosition(200, 500);
-
-	//right.setFillColor(sf::Color::White);
-	//right.setString(std::to_string(circle.getPosition().x+ circle.getGlobalBounds().width));
-	//right.setPosition(1000, 500);
-	//std::cout << circle.getPosition().x<< std::endl;
 	int zero = SLIDER_BOUNDS;
 	int full = width - SLIDER_BOUNDS;
 	int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
@@ -296,7 +288,7 @@ int Slider::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 		circle.setPosition(x, circle.getPosition().y);
 		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
 		volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
-		volumeValue.setString(std::to_string(volume));
+		
 	}
 
 	return volume;

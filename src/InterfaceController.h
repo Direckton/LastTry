@@ -14,7 +14,7 @@ class InterfaceController : public Menu, public Settings, public Input
 
 	int width, height; //h&w of the screen
 
-	int volume;
+	int volume = 50;
 	bool mute = false;
 
 
@@ -107,17 +107,12 @@ public:
 		{
 		case 1:
 		{
-			if (!settings->getSliderStatus())
+			if (settings->activateSlider(window))
 			{
-				settings->activateSlider(window); // checks if cursor is in bounds of a slider
-			}
-			if(settings->getSliderStatus())
-			{
-				//std::cout << event.mouseMove.x << " " << event.mouseMove.y << std::endl;
 				volume = settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
-				settings->setCheckboxStatus(1, true);
 			}
-			if(settings)
+
+				settings->setCheckboxStatus(1, true); // checks if cursor is in bounds of a slider
 
 			handleCheckbox(settings->checkForBounds(window));
 
