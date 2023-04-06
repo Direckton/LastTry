@@ -44,6 +44,7 @@ protected:
 
 	int width, height; //window size
 	int x, y; //x and y coordinates of the slider
+	int boundX, boundY;
 
 	bool sliderActive = false;
 
@@ -53,7 +54,7 @@ public:
 	~Slider(){}
 
 	void draw(sf::RenderWindow& window);
-	void activateSlider(sf::RenderWindow& window);
+	bool activateSlider(sf::RenderWindow& window);
 	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
 	sf::Vector2f getCirclePosition();
 	bool getSliderStatus();
@@ -65,7 +66,7 @@ public:
 class Settings : public Input, public Checkbox, public Slider
 {
 private:
-	sf::Text title, left, right, volume;
+	sf::Text title, volume;
 	sf::Text volumeValue;
 	sf::Font font;
 	sf::CircleShape circle;
@@ -81,7 +82,8 @@ private:
 	bool changeState = false;
 	
 public:
-
+	
+	Slider volSlider;
 	Slider sfxSlider;
 
 	Settings(){}
@@ -98,6 +100,7 @@ public:
 	bool getCheckboxStatus(int i);
 	void setCheckboxStatus(int i, bool state);
 	sf::Vector2f getCirclePosition();
+	void updateInterface();
 
 };
 

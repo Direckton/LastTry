@@ -106,16 +106,23 @@ public:
 		switch (interface)
 		{
 		case 1:
-		{
-			if (settings->activateSlider(window))
+		{	
+			//BUGFIX when one slider is active and cursor is dragged on another slider bounds the 
+			//currentyly active slider deactivates
+			if ((settings->volSlider.activateSlider(window) || settings->volSlider.getSliderStatus()) && ! settings->sfxSlider.getSliderStatus())
 			{
-				volume = settings->changeCirclePosition(event.mouseMove.x, event.mouseMove.y, window);
+				volume = settings->volSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
+			}
+			if ((settings->sfxSlider.activateSlider(window) || settings->sfxSlider.getSliderStatus()) && !settings->volSlider.getSliderStatus())
+			{
+				settings->sfxSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
 			}
 
 				settings->setCheckboxStatus(1, true); // checks if cursor is in bounds of a slider
 
 			handleCheckbox(settings->checkForBounds(window));
 
+			settings->updateInterface();
 			break;
 		}
 		default:
@@ -135,8 +142,9 @@ public:
 		{
 		case 1:
 		{
-			settings->deactivateSlider();
+			settings->volSlider.deactivateSlider();
 			settings->deactivateClick();
+			settings->sfxSlider.deactivateSlider();
 			break;
 		}
 		default:

@@ -14,6 +14,7 @@ Settings::Settings(int _width, int _hight)
 	}
 	
 	sfxSlider = Slider(width, _hight, 300);
+	volSlider = Slider(width, _hight, 200);
 
 	if (!font.loadFromFile("OXYGENE1.ttf"))
 	{
@@ -37,25 +38,6 @@ Settings::Settings(int _width, int _hight)
 	volumeValue.setString("50");
 	volumeValue.setPosition(volume.getPosition().x + volume.getGlobalBounds().width, 100);
 
-
-	bar.setSize(sf::Vector2f(width - 2*SLIDER_BOUNDS,10));
-	bar.setFillColor(sf::Color::White);
-	bar.setPosition(SLIDER_BOUNDS, 200);
-
-	circle.setRadius(15);
-	circle.setPointCount(20);
-	circle.setFillColor(sf::Color::Green);
-	circle.setOutlineThickness(3);
-	circle.setOutlineColor(sf::Color::White);
-	circle.setPosition(width/2,200);
-	circle.setOrigin(circle.getRadius() / 2, circle.getRadius() / 2);
-
-	progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
-	progress.setFillColor(sf::Color(3, 252, 248,100));
-	progress.setPosition(bar.getPosition());
-
-	left.setFont(font);
-	right.setFont(font);
 }
 Settings::~Settings()
 {
@@ -96,66 +78,18 @@ int Settings::checkForBounds(sf::RenderWindow &window)
 	return -1;
 }
 
-bool Settings::activateSlider(sf::RenderWindow &window)
-{
-	//std::cout << circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) << std::endl;
-	if (circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-	{
-		sliderActive = true;
-		return true;
-	}
-	//sliderActive = false;
-	return false;
-}
-
 
 void Settings::deactivateClick()
 {
 	changeState = false;
 }
 
-
-void Settings::deactivateSlider()
+void Settings::updateInterface()
 {
-	sliderActive = false;
+	//int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+	int volume = (volSlider.getCirclePosition().x - SLIDER_BOUNDS) / (width - 2 * SLIDER_BOUNDS - 5) * 100;
+	volumeValue.setString(std::to_string(volume));
 }
-
-bool Settings::getSliderStatus()
-{
-	return sliderActive;
-}
-
-sf::Vector2f Settings::getCirclePosition()
-{
-	return circle.getPosition();
-}
-
-int Settings::changeCirclePosition(int x, int y, sf::RenderWindow& window)
-{
-
-	//left.setFillColor(sf::Color::White);
-	//left.setString(std::to_string(circle.getPosition().x));
-	//left.setPosition(200, 500);
-
-	//right.setFillColor(sf::Color::White);
-	//right.setString(std::to_string(circle.getPosition().x+ circle.getGlobalBounds().width));
-	//right.setPosition(1000, 500);
-	//std::cout << circle.getPosition().x<< std::endl;
-	int zero = SLIDER_BOUNDS;
-	int full = width - SLIDER_BOUNDS;
-	int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
-
-	if (x > SLIDER_BOUNDS && x < full)
-	{
-		circle.setPosition(x, circle.getPosition().y);
-		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
-		volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
-		volumeValue.setString(std::to_string(volume));
-	}
-	
-	return volume;
-}
-
 
 void Settings::draw(sf::RenderWindow& window)
 {
@@ -163,10 +97,7 @@ void Settings::draw(sf::RenderWindow& window)
 
 	window.draw(volume);
 	window.draw(volumeValue);
-	window.draw(left);
-	window.draw(right);
-	window.draw(bar);
-	window.draw(progress);
+	volSlider.draw(window);
 	sfxSlider.draw(window);
 	for (int i = 0; i < 3; i++)
 	{
@@ -240,6 +171,9 @@ Slider::Slider(int _width, int _height, int _y)
 	bar.setFillColor(sf::Color::White);
 	bar.setPosition(SLIDER_BOUNDS, y);
 
+	boundX = bar.getSize().x;
+	boundY = bar.getSize().y;
+
 	circle.setRadius(15);
 	circle.setPointCount(20);
 	circle.setFillColor(sf::Color::Green);
@@ -253,14 +187,17 @@ Slider::Slider(int _width, int _height, int _y)
 	progress.setPosition(bar.getPosition());
 }
 
-void Slider::activateSlider(sf::RenderWindow& window)
+bool Slider::activateSlider(sf::RenderWindow& window)
 {
-	if (circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	//std::cout << circle.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) << std::endl;
+	if (bar.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 	{
 		sliderActive = true;
+		return true;
 	}
+	//sliderActive = false;
+	return false;
 }
-
 void Slider::deactivateSlider()
 {
 	sliderActive = false;
