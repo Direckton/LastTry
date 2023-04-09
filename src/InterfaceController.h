@@ -15,6 +15,8 @@ class InterfaceController : public Menu, public Settings, public Input
 	int width, height; //h&w of the screen
 
 	int volume = 50;
+	int sfxVolume = 50;
+
 	bool mute = false;
 
 
@@ -83,22 +85,41 @@ public:
 		{
 		case 0:
 		{
+			if (settings->getCheckboxStatus(0))
+			{
+				volume = 0;
+				sfxVolume = 0;
+			}
+			else
+			{
+				volume = settings->getSliderVolume(0);
+				sfxVolume = settings->getSliderVolume(1);
+
+			}
 			//mute
 			break;
 		}
 		case 1:
 		{
-			//mute sfx
+			break;
+			//automatic replay
 			break;
 		}
 		case 2:
 		{
-			//automatic replay
+			//progress bar
 			break;
 		}
 		default:
 			break;
 		}
+	}
+
+	void resetVolume()
+	{
+		settings->setCheckboxStatus(0, false);
+		volume = settings->getSliderVolume(0);
+		sfxVolume = settings->getSliderVolume(1);
 	}
 
 	void mouseInput(sf::Event& event, sf::RenderWindow &window)
@@ -111,15 +132,16 @@ public:
 			//currentyly active slider deactivates
 			if ((settings->volSlider.activateSlider(window) || settings->volSlider.getSliderStatus()) && ! settings->sfxSlider.getSliderStatus())
 			{
+				resetVolume();
 				volume = settings->volSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
 			}
 			if ((settings->sfxSlider.activateSlider(window) || settings->sfxSlider.getSliderStatus()) && !settings->volSlider.getSliderStatus())
 			{
+				resetVolume();
 				settings->sfxSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
 			}
 
-				settings->setCheckboxStatus(1, true); // checks if cursor is in bounds of a slider
-
+			
 			handleCheckbox(settings->checkForBounds(window));
 
 			settings->updateInterface();

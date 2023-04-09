@@ -4,14 +4,21 @@
 Settings::Settings(int _width, int _hight)
 {	
 	width = _width;
-	for (int i = 0; i < 3; i++)
-	{
-		checkbox.push_back(Checkbox(ch));
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		checkbox[i].setPosition(width / 3 * i + SLIDER_BOUNDS, 450);
-	}
+	height = _hight;
+
+
+	mute = Checkbox(copy, "MUTE");
+	replay = Checkbox(copy, "AUTO-REPLAY");
+	progressBar = Checkbox(copy, "PROGRESS BAR");
+	
+
+	mute.setPosition(SLIDER_BOUNDS, 600);
+	replay.setPosition(width/2-200, 600);
+	progressBar.setPosition(width -500, 600);
+	
+	checkbox.push_back(mute);
+	checkbox.push_back(replay);
+	checkbox.push_back(progressBar);
 	
 	sfxSlider = Slider(width, _hight, 300);
 	volSlider = Slider(width, _hight, 200);
@@ -57,7 +64,6 @@ int Settings::checkForBounds(sf::RenderWindow &window)
 {
 	for (int i = 0; i < 3; i++)
 	{
-
 		if (checkbox[i].getShape().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
 			&& !changeState)
 		{
@@ -65,12 +71,10 @@ int Settings::checkForBounds(sf::RenderWindow &window)
 			if (checkbox[i].getStatus())
 			{
 				checkbox[i].setStatus(false);
-
 			}
 			else
 			{
 				checkbox[i].setStatus(true);
-
 			}
 			return i;
 		}
@@ -91,6 +95,25 @@ void Settings::updateInterface()
 	volumeValue.setString(std::to_string(volume));
 }
 
+
+int Settings::getSliderVolume(int slider)
+{
+	switch (slider)
+	{
+	case 0:
+	{
+		return (volSlider.getCirclePosition().x - SLIDER_BOUNDS) / (width - 2 * SLIDER_BOUNDS - 5) * 100;
+	}
+	case 1:
+	{
+		return (sfxSlider.getCirclePosition().x - SLIDER_BOUNDS) / (width - 2 * SLIDER_BOUNDS - 5) * 100;
+	}
+	default:
+		return 50;
+		break;
+	}
+}
+
 void Settings::draw(sf::RenderWindow& window)
 {
 	window.clear();
@@ -99,6 +122,9 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(volumeValue);
 	volSlider.draw(window);
 	sfxSlider.draw(window);
+	/*mute.draw(window);
+	replay.draw(window);
+	progressBar.draw(window);*/
 	for (int i = 0; i < 3; i++)
 	{
 		checkbox[i].draw(window);
@@ -108,7 +134,7 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(circle);
 }
 
-Checkbox::Checkbox()
+Checkbox::Checkbox(std::string name)
 {
 	box.setSize(sf::Vector2f(25, 25));
 	box.setFillColor(sf::Color::Transparent);
@@ -123,8 +149,20 @@ Checkbox::Checkbox()
 
 	s_tick.setTexture(t_tick);
 	s_tick.setScale(sf::Vector2f(0.07, 0.07));
+
+	if (!font.loadFromFile("OXYGENE1.ttf"))
+	{
+		std::cout << "Error while loading font!";
+	}
+	title.setFont(font);
+	title.setFillColor(sf::Color::White);
+	title.setCharacterSize(40);
+	title.setString(name);
+
 	
 }
+
+
 
 
 void Checkbox::setSprite(sf::Texture& tx)
@@ -138,14 +176,15 @@ void Checkbox::draw(sf::RenderWindow& window)
 	if (check)
 	{
 		window.draw(s_tick);
-
 	}
+	window.draw(title);
 }
 
 void Checkbox::setPosition(int _x, int _y)
 {
 	box.setPosition(_x, _y);
 	s_tick.setPosition(_x - TICK_OFFSET, _y - TICK_OFFSET);
+	title.setPosition(_x +50, _y-15);
 }
 
 void Checkbox::setStatus(bool state)
@@ -161,6 +200,7 @@ sf::RectangleShape Checkbox::getShape()
 {
 	return box;
 }
+
 
 Slider::Slider(int _width, int _height, int _y)
 {

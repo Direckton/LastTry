@@ -10,19 +10,25 @@
 class Checkbox
 {
 protected:
+	sf::Text title;
+	sf::Font font;
 	sf::RectangleShape box;
 	sf::Texture t_tick;
 	sf::Sprite s_tick;
+	std::string name;
 
 
 	bool check = true;
 public:
-	Checkbox();
-	Checkbox(const Checkbox& _checkbox)
+	Checkbox() {};
+	Checkbox(std::string title);
+	Checkbox(const Checkbox& _checkbox, std::string _name)
 	{
 		box = _checkbox.box;
 		t_tick = _checkbox.t_tick;
 		s_tick = _checkbox.s_tick;
+		title = _checkbox.title;
+		title.setString(_name);
 	}
 	~Checkbox() {};
 
@@ -33,6 +39,8 @@ public:
 
 	sf::RectangleShape getShape();
 	void setPosition(int x, int y);
+
+	sf::FloatRect getBounds();
 };
 
 class Slider
@@ -72,7 +80,9 @@ private:
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
 
-	Checkbox ch;
+	Checkbox copy = Checkbox("ASS");
+
+	Checkbox mute, replay, progressBar;
 
 	std::vector<Checkbox> checkbox;
 
@@ -101,6 +111,13 @@ public:
 	void setCheckboxStatus(int i, bool state);
 	sf::Vector2f getCirclePosition();
 	void updateInterface();
+	
+	/**
+	* calculates volume out of slider position from 0 to 100
+	* 0 for music volume
+	* 1 for sfx volume
+	*/
+	int getSliderVolume(int silder);
 
 };
 

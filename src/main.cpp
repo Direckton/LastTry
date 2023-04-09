@@ -23,7 +23,7 @@ int main()
 
     music.playMusic("res/sounds/Sweden.wav");
 
-    
+    window.getSettings().antialiasingLevel;
 
     bool mouseTrack = false;
 
