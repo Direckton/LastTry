@@ -3,14 +3,16 @@
 #include "Menu.h"
 #include "Settings.h"
 #include "Exit.h"
+#include "LevelSelector.h"
 #include <iostream>
 
-class InterfaceController : public Menu, public Settings, public Input
+class InterfaceController : public Menu, public Settings, public Input, public Selector
 {
 	int interface; //0 = menu, 1 = settings
 	Menu* menu = nullptr;
 	Settings* settings = nullptr;
 	Exit* exit = nullptr;
+	Selector* selector = nullptr;
 
 	int width, height; //h&w of the screen
 
@@ -28,7 +30,7 @@ public:
 	{
 		width = _width;
 		height = _height;
-		interface = 0;
+		interface = 3;
 
 
 		switch (interface)
@@ -44,8 +46,15 @@ public:
 			break;
 		}
 		case 2:
+		{
 			exit = new Exit(width, height);
 			break;
+		}
+		case 3:
+		{
+			selector = new Selector(width, height);
+			break;
+		}
 		}
 	}
 	~InterfaceController()
@@ -213,6 +222,11 @@ public:
 		case 2:
 		{
 			exit->draw(window);
+			break;
+		}
+		case 3:
+		{
+			selector->draw(window);
 			break;
 		}
 		}

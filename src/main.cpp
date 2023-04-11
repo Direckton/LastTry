@@ -4,6 +4,7 @@
 #include "InterfaceController.h"
 #include "Music.h"
 #include <iostream>
+#include "FileLoader.h"
 
 #include <SFML/Audio.hpp>
 
@@ -16,10 +17,17 @@ using namespace sf;
 
 int main()
 {
+
+    Fileloader fl;
+
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash");
+    View view;
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
     SoundControler music;
+
+    view.reset(sf::FloatRect(0, 0, WIDTH, HEIGHT));
+    window.setView(view);
 
     music.playMusic("res/sounds/Sweden.wav");
 
