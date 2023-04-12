@@ -7,6 +7,7 @@ private:
 	sf::Text label;
 	sf::Font font;
 public:
+	Level(){}
 	Level(int _width, int _height);
 	~Level(){}
 
@@ -15,7 +16,8 @@ public:
 
 class Selector
 {
-	std::vector<Level> levels;
+	Level *level;
+	std::vector<Level *> levels;
 public:
 	Selector() {};
 	Selector(int _width, int _height);

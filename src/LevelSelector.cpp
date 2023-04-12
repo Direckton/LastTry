@@ -21,14 +21,16 @@ void Level::draw(sf::RenderWindow &window)
 
 Selector::Selector(int _width, int _height)
 {
-	levels.push_back(Level(_width, _height));
+	level = new Level(_width, _height);
+	levels.push_back(level);
 }
 
 
 void Selector::draw(sf::RenderWindow& window)
 {
-	for (auto l : levels)
+	//levels[0]->draw(window);
+	for (auto l: levels)
 	{
-		l.draw(window);
+		l->draw(window);
 	}
 }
