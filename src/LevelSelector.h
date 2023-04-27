@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "InputHandler.h"
 
-class Level
+class Level 
 {
 private:
 	sf::Text label;
@@ -14,7 +15,7 @@ public:
 	void draw(sf::RenderWindow& window);
 };
 
-class Selector
+class Selector : public Input
 {
 	Level *level;
 	std::vector<Level *> levels;

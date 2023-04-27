@@ -28,6 +28,7 @@ Selector::Selector(int _width, int _height)
 
 void Selector::draw(sf::RenderWindow& window)
 {
+	window.clear();
 	//levels[0]->draw(window);
 	for (auto l: levels)
 	{

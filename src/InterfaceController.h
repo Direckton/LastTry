@@ -30,7 +30,7 @@ public:
 	{
 		width = _width;
 		height = _height;
-		interface = 3;
+		interface = 0;
 
 
 		switch (interface)
@@ -202,6 +202,11 @@ public:
 			parser(exit->keyHandler(event));
 			break;
 		}
+		case 3:
+		{
+			parser(selector->keyHandler(event));
+			break;
+		}
 		}
 	}
 
@@ -237,6 +242,11 @@ public:
 		{
 		case 0:
 			//select level
+			if (selector == nullptr)
+			{
+				selector = new Selector(width, height);
+			}
+			interface = 3;
 			break;
 		case 1:
 		{
@@ -354,6 +364,11 @@ public:
 
 		}
 		case 2:
+		{
+			goBackToMenu();
+			break;
+		}
+		case 3:
 		{
 			goBackToMenu();
 			break;
