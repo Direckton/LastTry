@@ -377,4 +377,9 @@ public:
 			break;
 		}
 	}
+
+	void changeView(sf::View& view, int _x, int _y)
+	{
+		view.move(sf::Vector2f(x, y));
+	}
 };

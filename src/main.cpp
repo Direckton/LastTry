@@ -32,7 +32,7 @@ int main()
     music.playMusic("res/sounds/Sweden.wav");
 
     window.getSettings().antialiasingLevel;
-
+    window.setFramerateLimit(120);
     bool mouseTrack = false;
 
     //sf::Texture tx;
