@@ -5,6 +5,7 @@
 #include "Music.h"
 #include <iostream>
 #include "FileLoader.h"
+#include "Level.h"
 
 #include <SFML/Audio.hpp>
 
@@ -25,6 +26,7 @@ int main()
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
     SoundControler music;
+    Level level;
 
     view.reset(sf::FloatRect(0, 0, WIDTH, HEIGHT));
     window.setView(view);
@@ -97,9 +99,11 @@ int main()
         }
         
 
+
         //Render
         controller.render(window);
         //window.draw(sp);
+        level.draw(window);
         window.display();
 	}
 

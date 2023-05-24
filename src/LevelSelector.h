@@ -2,27 +2,30 @@
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
 
-class Level 
+class LevelInstance 
 {
 private:
-	sf::Text label;
+	sf::Text label, button, cursor;
 	sf::Font font;
+	int width, height;
 public:
-	Level(){}
-	Level(int _width, int _height, std::string name);
-	~Level(){}
+	LevelInstance(){}
+	LevelInstance(int _width, int _height, int _offset, std::string name);
+	~LevelInstance(){}
 
 	void draw(sf::RenderWindow& window);
+	int getCenter();
 };
 
 class Selector : public Input
 {
-	Level *level;
-	std::vector<Level *> levels;
+	LevelInstance *level;
+	std::vector<LevelInstance *> levels;
 	sf::View view;
 	unsigned levelInFocus;
-	bool viewMoving = false;
+	bool viewMovingRight = false, viewMovingLeft = false;
 	int width, height;
+
 
 public:
 	Selector() {};
@@ -30,5 +33,8 @@ public:
 
 	void draw(sf::RenderWindow& window);
 
-	void switchLevel(int level);
+	void switchLevel(int level, bool right, bool left);
+	void moveRight();
+	void moveLeft();
+	void select();
 };

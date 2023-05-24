@@ -339,6 +339,7 @@ public:
 	{
 		//settings->menu
 		//delete settings;
+		
 		if (menu == nullptr)
 		{
 			menu = new Menu(width, height);
