@@ -20,13 +20,16 @@ int main()
 {
 
     Fileloader fl;
+    ContextSettings CSettings;
+    CSettings.antialiasingLevel = 8;
 
-	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash");
+	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash",sf::Style::Default,CSettings);
     View view;
     Event event;
     InterfaceController controller(WIDTH,HEIGHT);
     SoundControler music;
-    Level level;
+
+    
 
     view.reset(sf::FloatRect(0, 0, WIDTH, HEIGHT));
     window.setView(view);
@@ -103,7 +106,6 @@ int main()
         //Render
         controller.render(window);
         //window.draw(sp);
-        level.draw(window);
         window.display();
 	}
 

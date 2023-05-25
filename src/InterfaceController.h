@@ -4,15 +4,17 @@
 #include "Settings.h"
 #include "Exit.h"
 #include "LevelSelector.h"
+#include "Level.h"
 #include <iostream>
 
-class InterfaceController : public Menu, public Settings, public Input, public Selector
+class InterfaceController : public Menu, public Settings, public Input, public Selector, public Level
 {
 	int interface; //0 = menu, 1 = settings
 	Menu* menu = nullptr;
 	Settings* settings = nullptr;
 	Exit* exit = nullptr;
 	Selector* selector = nullptr;
+	Level* level = nullptr;
 
 	int width, height; //h&w of the screen
 
@@ -207,6 +209,11 @@ public:
 			parser(selector->keyHandler(event));
 			break;
 		}
+		case 4:
+		{
+			parser(level->keyHandler(event));
+			break;
+		}
 		}
 	}
 
@@ -232,6 +239,11 @@ public:
 		case 3:
 		{
 			selector->draw(window);
+			break;
+		}
+		case 4:
+		{
+			level->draw(window);
 			break;
 		}
 		}
@@ -274,6 +286,15 @@ public:
 		}
 	}
 
+	void levelSelection()
+	{
+		if (level == nullptr)
+		{
+			level = new Level(); //add level number through selector.getLevelIndex
+		}
+		interface = 4;
+	}
+
 	bool updateClose()
 	{
 		return close;
@@ -310,7 +331,7 @@ public:
 		}
 		case 1:
 		{
-			//setting selections
+			//settings selection
 			break;
 		}
 		case 2:
@@ -318,6 +339,11 @@ public:
 			//exit selections
 			exitSelections();
 
+		}
+		case 3:
+		{
+			levelSelection();
+			break;
 		}
 		default:
 			break;
@@ -370,6 +396,11 @@ public:
 			break;
 		}
 		case 3:
+		{
+			goBackToMenu();
+			break;
+		}
+		case 4:
 		{
 			goBackToMenu();
 			break;

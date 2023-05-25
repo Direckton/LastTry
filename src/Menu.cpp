@@ -43,11 +43,11 @@ Menu::Menu(int _width, int _height)
 void Menu::draw(sf::RenderWindow &window)
 {
 	//title.setString(std::to_string(selector));
-	//sf::View view(sf::FloatRect(0, 0, width, height));
+	sf::View view(sf::FloatRect(0, 0, width, height)); //view reset form level and selector
 
 	//view.move(sf::Vector2f(200, 0));
 
-	//window.setView(view);
+	window.setView(view);
 
 	window.clear();
 
