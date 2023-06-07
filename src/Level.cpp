@@ -2,16 +2,15 @@
 
 Player::Player()
 {
-	texture.loadFromFile("./player.png");
+	texture.loadFromFile("res/player.png");
 	
 	sprite.setTexture(texture);
-	sprite.setColor(sf::Color::Green);
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR-60));
-	sprite.setScale(sf::Vector2f(0.6f, 0.6f));
 }
 
 void Player::draw(sf::RenderWindow& window)
 {
+	sprite.move(sf::Vector2f(1.f, 0.f));
 	window.draw(sprite);
 }
 
@@ -57,25 +56,23 @@ Spike::Spike()
 
 Spike::Spike(int _x, int _y ,sf::Color color)
 {
-	x = _x;
-	y = _y;
+	x = _x * GRID_WIDTH;
+	y = _y * GRID_HIGHT;
 	triangle = sf::VertexArray(sf::Triangles, 3);
 
-	triangle[0].position = sf::Vector2f(x+GRID_WIDTH/2, y);
-	triangle[1].position = sf::Vector2f(x-GRID_WIDTH/2, y);
-	triangle[2].position = sf::Vector2f(x, y-GRID_HIGHT);
+	triangle[0].position = sf::Vector2f(x, FLOOR - y);
+	triangle[1].position = sf::Vector2f(x+GRID_WIDTH/2, FLOOR - y - GRID_HIGHT);
+	triangle[2].position = sf::Vector2f(x + GRID_WIDTH, FLOOR - y);
 
 	triangle[0].color = color;
-	triangle[1].color = color;
-	triangle[2].color = sf::Color::Black;
+	triangle[1].color = sf::Color::Black;
+	triangle[2].color = color;
 
-	tx.loadFromFile("./outline.png");
+	tx.loadFromFile("res/triangle_glow.png");
 
 	sp.setTexture(tx);
-	sp.setScale(sf::Vector2f(0.5f, 0.5f));
-	sp.setColor(sf::Color::White);
-	sp.setPosition(x-GRID_WIDTH/2, y-GRID_HIGHT);
-
+	sp.setPosition(x - 3, FLOOR - y - GRID_HIGHT-2);
+	
 }
 
 void Spike::draw(sf::RenderWindow& window)

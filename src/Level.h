@@ -53,7 +53,7 @@ class Level : public Input
 {
 	Block block = Block(10, 0, sf::Color::Blue);
 	Block block2 = Block(10, 1, sf::Color::Blue);
-	Spike spike = Spike(100, FLOOR, sf::Color::Red);
+	Spike spike = Spike(10, 2, sf::Color::Blue);
 	Player player;
 	sf::RectangleShape floor;
 
