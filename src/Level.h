@@ -20,11 +20,12 @@ public:
 class Block
 {
 	sf::RectangleShape rectangle;
+	sf::VertexArray block;
 	//60x60px
 	int x, y;
 
 public:
-	Block();
+	Block(int x, int y, const sf::Color& color);
 	~Block();
 	void draw(sf::RenderWindow& window);
 };
@@ -32,6 +33,9 @@ public:
 class Spike
 {
 	int x, y;
+	sf::Texture tx;
+	sf::Sprite sp;
+
 	sf::VertexArray triangle;
 	sf::CircleShape tri;
 
@@ -45,8 +49,9 @@ public:
 
 class Level : public Input
 {
-	Block block;
-	Spike spike;
+	Block block = Block(10, 0, sf::Color::Blue);
+	Block block2 = Block(10, 1, sf::Color::Blue);
+	Spike spike = Spike(100, FLOOR, sf::Color::Red);
 	Player player;
 	sf::RectangleShape floor;
 

@@ -16,8 +16,10 @@ void Player::draw(sf::RenderWindow& window)
 }
 
 
-Block::Block()
+Block::Block(int _x, int _y, const sf::Color& color)
 {
+	x = _x * GRID_WIDTH;
+	y = _y * GRID_HIGHT;
 	rectangle.setSize(sf::Vector2f(60, 60));
 	rectangle.setOutlineColor(sf::Color::White);
 	rectangle.setOutlineThickness(5);
@@ -25,6 +27,24 @@ Block::Block()
 	rectangle.setPosition(10, FLOOR - rectangle.getSize().y
 		- rectangle.getOutlineThickness());
 
+	block = sf::VertexArray(sf::Quads, 4);
+
+	block[0].position = sf::Vector2f(x, FLOOR - y);
+	block[1].position = sf::Vector2f(x, FLOOR - y - GRID_HIGHT);
+	block[2].position = sf::Vector2f(x+GRID_WIDTH, FLOOR - y - GRID_HIGHT);
+	block[3].position = sf::Vector2f(x+GRID_WIDTH, FLOOR - y);
+
+	block[0].color = color;
+	block[1].color = sf::Color::Black;
+	block[2].color = sf::Color::Black;
+	block[3].color = color;
+
+}
+
+void Block::draw(sf::RenderWindow& window)
+{
+	window.draw(block);
+	//window.draw(rectangle);
 }
 
 Block::~Block()
@@ -32,7 +52,8 @@ Block::~Block()
 
 }
 Spike::Spike()
-{}
+{
+}
 
 Spike::Spike(int _x, int _y ,sf::Color color)
 {
@@ -48,18 +69,22 @@ Spike::Spike(int _x, int _y ,sf::Color color)
 	triangle[1].color = color;
 	triangle[2].color = sf::Color::Black;
 
+	tx.loadFromFile("./outline.png");
+
+	sp.setTexture(tx);
+	sp.setScale(sf::Vector2f(0.5f, 0.5f));
+	sp.setColor(sf::Color::White);
+	sp.setPosition(x-GRID_WIDTH/2, y-GRID_HIGHT);
+
 }
 
 void Spike::draw(sf::RenderWindow& window)
 {
 	window.draw(triangle);
+	window.draw(sp);
 	//window.draw(tri);
 }
 
-void Block::draw(sf::RenderWindow& window)
-{
-	window.draw(rectangle);
-}
 
 Level::Level()
 {
@@ -69,7 +94,6 @@ Level::Level()
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
-	spike = Spike(100, FLOOR, sf::Color::Red);
 }
 
 Level::~Level()
@@ -80,9 +104,12 @@ Level::~Level()
 void Level::draw(sf::RenderWindow& window)
 {
 	sf::View view(sf::FloatRect(0, 0, 1280, 720));
+	
 	window.setView(view);
-	window.clear();
+	
+	window.clear(sf::Color::Red);
 	block.draw(window);
+	block2.draw(window);
 	spike.draw(window);
 	player.draw(window);
 	window.draw(floor);
