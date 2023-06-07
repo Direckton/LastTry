@@ -19,8 +19,10 @@ public:
 
 class Block
 {
-	sf::RectangleShape rectangle;
+	//sf::RectangleShape rectangle;
 	sf::VertexArray block;
+	sf::Sprite s;
+	sf::Texture t;
 	//60x60px
 	int x, y;
 

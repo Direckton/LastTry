@@ -20,12 +20,7 @@ Block::Block(int _x, int _y, const sf::Color& color)
 {
 	x = _x * GRID_WIDTH;
 	y = _y * GRID_HIGHT;
-	rectangle.setSize(sf::Vector2f(60, 60));
-	rectangle.setOutlineColor(sf::Color::White);
-	rectangle.setOutlineThickness(5);
-	rectangle.setFillColor(sf::Color::Cyan);
-	rectangle.setPosition(10, FLOOR - rectangle.getSize().y
-		- rectangle.getOutlineThickness());
+
 
 	block = sf::VertexArray(sf::Quads, 4);
 
@@ -39,11 +34,16 @@ Block::Block(int _x, int _y, const sf::Color& color)
 	block[2].color = sf::Color::Black;
 	block[3].color = color;
 
+	t.loadFromFile("res/glow.png");
+	s.setTexture(t);
+	s.setPosition(x-3, FLOOR - y - GRID_HIGHT-3);
+
 }
 
 void Block::draw(sf::RenderWindow& window)
 {
 	window.draw(block);
+	window.draw(s);
 	//window.draw(rectangle);
 }
 
@@ -107,7 +107,7 @@ void Level::draw(sf::RenderWindow& window)
 	
 	window.setView(view);
 	
-	window.clear(sf::Color::Red);
+	window.clear(sf::Color::Black);
 	block.draw(window);
 	block2.draw(window);
 	spike.draw(window);
