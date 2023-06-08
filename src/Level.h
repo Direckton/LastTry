@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
+#include <math.h>
+#include <chrono>
 
 #define GRID_WIDTH 60
 #define GRID_HIGHT 60
@@ -11,10 +13,20 @@ class Player
 	sf::Sprite sprite;
 	sf::Texture texture;
 	int x, y;
+	bool onGround = true;
+
+	float pi = 3.14159265359f;
+	float yDelta = 0;
+
+
 public:
 	Player();
 
 	void draw(sf::RenderWindow& window);
+	void jump();
+	void update();
+	sf::FloatRect getBounds();
+	void reset();
 };
 
 class Block
@@ -30,6 +42,7 @@ public:
 	Block(int x, int y, const sf::Color& color);
 	~Block();
 	void draw(sf::RenderWindow& window);
+	sf::FloatRect getBounds();
 };
 
 class Spike
@@ -51,16 +64,25 @@ public:
 
 class Level : public Input
 {
-	Block block = Block(10, 0, sf::Color::Blue);
-	Block block2 = Block(10, 1, sf::Color::Blue);
-	Spike spike = Spike(10, 2, sf::Color::Blue);
+	Block block = Block(9, 0, sf::Color::Blue);
+	Block block2 = Block(10, 0, sf::Color::Blue);
+	Spike spike = Spike(11, 0, sf::Color::Blue);
 	Player player;
 	sf::RectangleShape floor;
+
+	bool eventQueue = false;
+	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);
+	std::chrono::high_resolution_clock::time_point start;
+	std::chrono::high_resolution_clock::time_point end;
+
+
 
 public:
 	Level();
 	~Level();
 
 	void draw(sf::RenderWindow& window);
+	void space();
+	void update();
 };
 

@@ -14,6 +14,8 @@ public:
 	virtual void moveLeft() {}
 	virtual void select() {}
 	virtual void escape() {}
+	virtual void space() {}
+
 
 	int keyHandler(sf::Event& event);
 	

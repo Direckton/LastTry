@@ -5,15 +5,52 @@ Player::Player()
 	texture.loadFromFile("res/player.png");
 	
 	sprite.setTexture(texture);
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR-60));
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID_HIGHT));
 }
 
 void Player::draw(sf::RenderWindow& window)
 {
-	sprite.move(sf::Vector2f(1.f, 0.f));
+	update();
 	window.draw(sprite);
 }
 
+void Player::jump()
+{
+	onGround = false;
+}
+
+void Player::update()
+{
+	sprite.move(sf::Vector2f(1.f, 0.f));
+	if (!onGround)
+	{
+		
+ 		sprite.move(sf::Vector2f(0, -std::cos(yDelta)));
+		if (yDelta < pi)
+		{
+			yDelta += 0.03f;
+		}
+		if (sprite.getGlobalBounds().top + GRID_WIDTH > FLOOR)
+		{
+			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT));
+			onGround = true;
+			yDelta = 0;
+		}
+	}
+}
+
+void Player::reset()
+{
+	onGround = true;
+	yDelta = 0;
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT));
+
+}
+
+sf::FloatRect Player::getBounds()
+{
+	return sprite.getGlobalBounds();
+}
 
 Block::Block(int _x, int _y, const sf::Color& color)
 {
@@ -44,6 +81,11 @@ void Block::draw(sf::RenderWindow& window)
 	window.draw(block);
 	window.draw(s);
 	//window.draw(rectangle);
+}
+
+sf::FloatRect Block::getBounds()
+{
+	return block.getBounds();
 }
 
 Block::~Block()
@@ -100,6 +142,7 @@ Level::~Level()
 
 void Level::draw(sf::RenderWindow& window)
 {
+	update();
 	sf::View view(sf::FloatRect(0, 0, 1280, 720));
 	
 	window.setView(view);
@@ -110,4 +153,44 @@ void Level::draw(sf::RenderWindow& window)
 	spike.draw(window);
 	player.draw(window);
 	window.draw(floor);
+
+	
+}
+
+void Level::update()
+{
+	if (eventQueue)
+	{
+		end = std::chrono::high_resolution_clock::now();
+		if (start + elapsed > end)
+		{
+			player.jump();
+		}
+		else
+		{
+			eventQueue = false;
+		}
+
+	}
+
+	if (player.getBounds().intersects(block.getBounds()))
+	{
+		if (player.getBounds().top <= block.getBounds().top + GRID_HIGHT)
+		{
+			player.reset();
+		}
+	}
+}
+
+void Level::space()
+{
+	//event life
+	//so when user pressed space right before the player landing 
+	//the event of jumping will be called sepite player not being on ground
+	// the next time onGround flag is insavtibe in 200ms window
+	
+	start = std::chrono::high_resolution_clock::now();
+	eventQueue = true;
+	//player.jump();
+	
 }

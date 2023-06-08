@@ -44,6 +44,12 @@ int Input::keyHandler(sf::Event& event)
 		return 2;
 		break;
 	}
+	case sf::Keyboard::Space:
+	{
+		space();
+		return 0;
+		break;
+	}
 	default:
 		break;
 	}
