@@ -12,6 +12,7 @@ class Player
 {
 	sf::Sprite sprite;
 	sf::Texture texture;
+	sf::FloatRect bb;
 	int x, y;
 	bool onGround = true;
 
@@ -27,6 +28,8 @@ public:
 	void update();
 	sf::FloatRect getBounds();
 	void reset();
+	void setOnGround(int y);
+	bool getOnGround();
 };
 
 class Block
@@ -64,11 +67,14 @@ public:
 
 class Level : public Input
 {
-	Block block = Block(9, 0, sf::Color::Blue);
+	std::vector<Block> blocks;
+	Block block1 = Block(9, 0, sf::Color::Blue);
 	Block block2 = Block(10, 0, sf::Color::Blue);
 	Spike spike = Spike(11, 0, sf::Color::Blue);
 	Player player;
 	sf::RectangleShape floor;
+
+	sf::FloatRect lastPosition;
 
 	bool eventQueue = false;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);

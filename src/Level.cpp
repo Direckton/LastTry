@@ -5,7 +5,11 @@ Player::Player()
 	texture.loadFromFile("res/player.png");
 	
 	sprite.setTexture(texture);
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID_HIGHT));
+	sprite.setOrigin(sf::Vector2f(30, 30));
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID_HIGHT +
+	sprite.getOrigin().y));
+
+	bb = sprite.getGlobalBounds();
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -19,20 +23,33 @@ void Player::jump()
 	onGround = false;
 }
 
+void Player::setOnGround(int y)
+{
+	onGround = true;
+	sprite.setPosition(sf::Vector2f(sprite.getPosition().x, y +
+		sprite.getOrigin().y));
+}
+
+bool Player::getOnGround()
+{
+	return onGround;
+}
+
 void Player::update()
 {
-	sprite.move(sf::Vector2f(1.f, 0.f));
+	sprite.move(sf::Vector2f(2.f, 0.f));
 	if (!onGround)
 	{
-		
- 		sprite.move(sf::Vector2f(0, -std::cos(yDelta)));
+		//sprite.rotate(1);
+ 		sprite.move(sf::Vector2f(0, -1.75*std::cos(yDelta)));
 		if (yDelta < pi)
 		{
-			yDelta += 0.03f;
+			yDelta += 0.02f;
 		}
 		if (sprite.getGlobalBounds().top + GRID_WIDTH > FLOOR)
 		{
-			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT));
+			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT +
+				sprite.getOrigin().y));
 			onGround = true;
 			yDelta = 0;
 		}
@@ -43,7 +60,9 @@ void Player::reset()
 {
 	onGround = true;
 	yDelta = 0;
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT));
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT + 
+		sprite.getOrigin().y));
+	sprite.setRotation(0);
 
 }
 
@@ -133,6 +152,8 @@ Level::Level()
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
+	blocks.push_back(block1);
+	blocks.push_back(block2);
 }
 
 Level::~Level()
@@ -148,8 +169,10 @@ void Level::draw(sf::RenderWindow& window)
 	window.setView(view);
 	
 	window.clear(sf::Color::Black);
-	block.draw(window);
-	block2.draw(window);
+	for (auto block : blocks)
+	{
+		block.draw(window);
+	}
 	spike.draw(window);
 	player.draw(window);
 	window.draw(floor);
@@ -173,13 +196,31 @@ void Level::update()
 
 	}
 
-	if (player.getBounds().intersects(block.getBounds()))
+	for (auto block : blocks)
 	{
-		if (player.getBounds().top <= block.getBounds().top + GRID_HIGHT)
+		if (player.getBounds().intersects(block.getBounds()))
+		{
+			if(!player.getOnGround() &&
+				block.getBounds().top > player.getBounds().top &&
+				block.getBounds().top - GRID_HIGHT <= player.getBounds().top)
+			{
+				player.setOnGround(block.getBounds().top-GRID_HIGHT);
+			}
+			else if (player.getBounds().left + player.getBounds().width >
+				block.getBounds().left)
+			{
+				player.reset();
+			}
+		
+		}
+		if (player.getBounds().left > 700)
 		{
 			player.reset();
 		}
+
 	}
+
+	lastPosition = player.getBounds();
 }
 
 void Level::space()
