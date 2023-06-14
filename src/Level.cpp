@@ -9,7 +9,8 @@ Player::Player()
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID_HIGHT +
 	sprite.getOrigin().y));
 
-	bb = sprite.getGlobalBounds();
+	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT +
+		sprite.getOrigin().y));
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -37,22 +38,27 @@ bool Player::getOnGround()
 
 void Player::update()
 {
-	sprite.move(sf::Vector2f(2.f, 0.f));
+	sprite.move(sf::Vector2f(4.f, 0.f));
+	playerBounds.setPosition(sprite.getPosition());
 	if (!onGround)
 	{
 		//sprite.rotate(1);
- 		sprite.move(sf::Vector2f(0, -1.75*std::cos(yDelta)));
-		if (yDelta < pi)
-		{
-			yDelta += 0.02f;
-		}
-		if (sprite.getGlobalBounds().top + GRID_WIDTH > FLOOR)
+ 		sprite.move(sf::Vector2f(0, yVelocity));
+		if (sprite.getGlobalBounds().top + GRID_WIDTH - sprite.getOrigin().y > FLOOR)
 		{
 			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT +
 				sprite.getOrigin().y));
 			onGround = true;
 			yDelta = 0;
 		}
+		else
+		{
+			yVelocity++;
+		}
+	}
+	else
+	{
+		yVelocity = -20;
 	}
 }
 
@@ -182,6 +188,7 @@ void Level::draw(sf::RenderWindow& window)
 
 void Level::update()
 {
+	//PLAYER EVENT QUEUEING
 	if (eventQueue)
 	{
 		end = std::chrono::high_resolution_clock::now();
@@ -195,32 +202,40 @@ void Level::update()
 		}
 
 	}
-
+	//COLISSION DETECTION
 	for (auto block : blocks)
 	{
 		if (player.getBounds().intersects(block.getBounds()))
 		{
-			if(!player.getOnGround() &&
-				block.getBounds().top > player.getBounds().top &&
-				block.getBounds().top - GRID_HIGHT <= player.getBounds().top)
+			//i dont like how it's made but i have no ide how to change it
+			//without changing all the objects
+			if(player.getBounds().left + GRID_WIDTH > block.getBounds().left)
 			{
-				player.setOnGround(block.getBounds().top-GRID_HIGHT);
-			}
-			else if (player.getBounds().left + player.getBounds().width >
-				block.getBounds().left)
-			{
-				player.reset();
-			}
-		
+				if (!player.getOnGround() &&
+					block.getBounds().top > player.getBounds().top &&
+					player.getBounds().top < block.getBounds().top -
+					GRID_HIGHT + 20)
+				{
+					player.setOnGround(block.getBounds().top - GRID_HIGHT);
+				}
+				else
+				{
+					player.reset();
+
+				}
+			}		
 		}
 		if (player.getBounds().left > 700)
 		{
 			player.reset();
 		}
+	}
+	//GRAVITY
+	if (!player.getOnGround())
+	{
 
 	}
 
-	lastPosition = player.getBounds();
 }
 
 void Level::space()

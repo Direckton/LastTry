@@ -12,15 +12,18 @@ class Player
 {
 	sf::Sprite sprite;
 	sf::Texture texture;
-	sf::FloatRect bb;
 	int x, y;
 	bool onGround = true;
 
 	float pi = 3.14159265359f;
 	float yDelta = 0;
 
+	float yVelocity = 0;
+
 
 public:
+	sf::RectangleShape playerBounds;
+
 	Player();
 
 	void draw(sf::RenderWindow& window);
