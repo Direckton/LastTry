@@ -44,22 +44,25 @@ void Player::update()
 	{
 		//sprite.rotate(1);
  		sprite.move(sf::Vector2f(0, yVelocity));
-		if (sprite.getGlobalBounds().top + GRID_WIDTH - sprite.getOrigin().y > FLOOR)
+		if (sprite.getGlobalBounds().top + GRID_WIDTH + yVelocity > FLOOR)
 		{
 			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT +
 				sprite.getOrigin().y));
 			onGround = true;
-			yDelta = 0;
+			yVelocity = 0;
 		}
 		else
 		{
-			yVelocity++;
+			yVelocity += 0.5;
 		}
 	}
 	else
 	{
-		yVelocity = -20;
+		yVelocity = -12;
 	}
+	
+
+
 }
 
 void Player::reset()
@@ -225,13 +228,12 @@ void Level::update()
 				}
 			}		
 		}
-		if (player.getBounds().left > 700)
+		if (player.getBounds().left > 1200)
 		{
 			player.reset();
 		}
 	}
 	//GRAVITY
-	if (!player.getOnGround())
 	{
 
 	}
