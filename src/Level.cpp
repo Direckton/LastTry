@@ -6,10 +6,10 @@ Player::Player()
 	
 	sprite.setTexture(texture);
 	sprite.setOrigin(sf::Vector2f(30, 30));
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID_HIGHT +
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID +
 	sprite.getOrigin().y));
 
-	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT +
+	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
 		sprite.getOrigin().y));
 }
 
@@ -22,10 +22,12 @@ void Player::draw(sf::RenderWindow& window)
 void Player::jump()
 {
 	onGround = false;
+	jumping = true;
 }
 
 void Player::setOnGround(int y)
 {
+	//onBlock = true;
 	onGround = true;
 	sprite.setPosition(sf::Vector2f(sprite.getPosition().x, y +
 		sprite.getOrigin().y));
@@ -39,37 +41,45 @@ bool Player::getOnGround()
 void Player::update()
 {
 	sprite.move(sf::Vector2f(4.f, 0.f));
-	playerBounds.setPosition(sprite.getPosition());
-	if (!onGround)
+	//playerBounds.setPosition(sprite.getPosition());
+
+	//if (falling)
+	//{
+	//	falling = false;
+	//	yVelocity = 0;
+	//}
+ 	if (!onGround)
 	{
 		//sprite.rotate(1);
  		sprite.move(sf::Vector2f(0, yVelocity));
-		if (sprite.getGlobalBounds().top + GRID_WIDTH + yVelocity > FLOOR)
+		if (sprite.getGlobalBounds().top + GRID + yVelocity > FLOOR)
 		{
-			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID_HIGHT +
+			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID +
 				sprite.getOrigin().y));
-			onGround = true;
+  			onGround = true;
 			yVelocity = 0;
 		}
-		else
-		{
-			yVelocity += 0.5;
-		}
+		yVelocity += 0.5;
 	}
 	else
 	{
 		yVelocity = -12;
+		
 	}
-	
 
 
+}
+
+void Player::gravity()
+{
+	onGround = false;
 }
 
 void Player::reset()
 {
 	onGround = true;
 	yDelta = 0;
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID_HIGHT + 
+	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID + 
 		sprite.getOrigin().y));
 	sprite.setRotation(0);
 
@@ -80,18 +90,23 @@ sf::FloatRect Player::getBounds()
 	return sprite.getGlobalBounds();
 }
 
+void Player::playerMove(float x, float y)
+{
+	sprite.move(x, y);
+}
+
 Block::Block(int _x, int _y, const sf::Color& color)
 {
-	x = _x * GRID_WIDTH;
-	y = _y * GRID_HIGHT;
+	x = _x * GRID;
+	y = _y * GRID;
 
 
 	block = sf::VertexArray(sf::Quads, 4);
 
 	block[0].position = sf::Vector2f(x, FLOOR - y);
-	block[1].position = sf::Vector2f(x, FLOOR - y - GRID_HIGHT);
-	block[2].position = sf::Vector2f(x+GRID_WIDTH, FLOOR - y - GRID_HIGHT);
-	block[3].position = sf::Vector2f(x+GRID_WIDTH, FLOOR - y);
+	block[1].position = sf::Vector2f(x, FLOOR - y - GRID);
+	block[2].position = sf::Vector2f(x+GRID, FLOOR - y - GRID);
+	block[3].position = sf::Vector2f(x+GRID, FLOOR - y);
 
 	block[0].color = color;
 	block[1].color = sf::Color::Black;
@@ -100,7 +115,7 @@ Block::Block(int _x, int _y, const sf::Color& color)
 
 	t.loadFromFile("res/glow.png");
 	s.setTexture(t);
-	s.setPosition(x-3, FLOOR - y - GRID_HIGHT-3);
+	s.setPosition(x-3, FLOOR - y - GRID-3);
 
 }
 
@@ -126,13 +141,13 @@ Spike::Spike()
 
 Spike::Spike(int _x, int _y ,sf::Color color)
 {
-	x = _x * GRID_WIDTH;
-	y = _y * GRID_HIGHT;
+	x = _x * GRID;
+	y = _y * GRID;
 	triangle = sf::VertexArray(sf::Triangles, 3);
 
 	triangle[0].position = sf::Vector2f(x, FLOOR - y);
-	triangle[1].position = sf::Vector2f(x+GRID_WIDTH/2, FLOOR - y - GRID_HIGHT);
-	triangle[2].position = sf::Vector2f(x + GRID_WIDTH, FLOOR - y);
+	triangle[1].position = sf::Vector2f(x+GRID/2, FLOOR - y - GRID);
+	triangle[2].position = sf::Vector2f(x + GRID, FLOOR - y);
 
 	triangle[0].color = color;
 	triangle[1].color = sf::Color::Black;
@@ -141,7 +156,7 @@ Spike::Spike(int _x, int _y ,sf::Color color)
 	tx.loadFromFile("res/triangle_glow.png");
 
 	sp.setTexture(tx);
-	sp.setPosition(x - 3, FLOOR - y - GRID_HIGHT-2);
+	sp.setPosition(x - 3, FLOOR - y - GRID-2);
 	
 }
 
@@ -163,6 +178,7 @@ Level::Level()
 
 	blocks.push_back(block1);
 	blocks.push_back(block2);
+	blocks.push_back(block3);
 }
 
 Level::~Level()
@@ -205,6 +221,8 @@ void Level::update()
 		}
 
 	}
+	bool flag = false;
+
 	//COLISSION DETECTION
 	for (auto block : blocks)
 	{
@@ -212,31 +230,39 @@ void Level::update()
 		{
 			//i dont like how it's made but i have no ide how to change it
 			//without changing all the objects
-			if(player.getBounds().left + GRID_WIDTH > block.getBounds().left)
+			if (!player.getOnGround() &&
+				block.getBounds().top > player.getBounds().top &&
+				player.getBounds().top < block.getBounds().top -
+				GRID + 20)
 			{
-				if (!player.getOnGround() &&
-					block.getBounds().top > player.getBounds().top &&
-					player.getBounds().top < block.getBounds().top -
-					GRID_HIGHT + 20)
-				{
-					player.setOnGround(block.getBounds().top - GRID_HIGHT);
-				}
-				else
-				{
-					player.reset();
-
-				}
-			}		
+				player.setOnGround(block.getBounds().top - GRID);
+			}
+			else
+			{
+				player.reset();
+			}
+				
 		}
-		if (player.getBounds().left > 1200)
+		if (block.getBounds().left + GRID < player.getBounds().left &&
+			player.getBounds().top < FLOOR - GRID)
 		{
-			player.reset();
+			flag = true;
 		}
+		else
+		{
+			flag = false;
+		}
+
+	}
+	if (flag)
+	{
+		player.gravity();
+	}
+	if (player.getBounds().left > 1200)
+	{
+		player.reset();
 	}
 	//GRAVITY
-	{
-
-	}
 
 }
 

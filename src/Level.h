@@ -4,8 +4,7 @@
 #include <math.h>
 #include <chrono>
 
-#define GRID_WIDTH 60
-#define GRID_HIGHT 60
+#define GRID 60
 #define FLOOR 600
 
 class Player
@@ -25,6 +24,9 @@ public:
 	sf::RectangleShape playerBounds;
 
 	Player();
+	bool falling = false;
+	bool jumping = false;
+
 
 	void draw(sf::RenderWindow& window);
 	void jump();
@@ -33,6 +35,10 @@ public:
 	void reset();
 	void setOnGround(int y);
 	bool getOnGround();
+	void playerMove(float x, float y);
+	void gravity();
+	//DEBUG
+	void changeColor(sf::Color color) { sprite.setColor(color); }
 };
 
 class Block
@@ -73,6 +79,7 @@ class Level : public Input
 	std::vector<Block> blocks;
 	Block block1 = Block(9, 0, sf::Color::Blue);
 	Block block2 = Block(10, 0, sf::Color::Blue);
+	Block block3 = Block(12, 2, sf::Color::Blue);
 	Spike spike = Spike(11, 0, sf::Color::Blue);
 	Player player;
 	sf::RectangleShape floor;
