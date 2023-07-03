@@ -13,11 +13,12 @@ class Player
 	sf::Texture texture;
 	int x, y;
 	bool onGround = true;
+	bool onBlock = true;
 
 	float pi = 3.14159265359f;
 	float yDelta = 0;
 
-	float yVelocity = 0;
+	float yAcceleration, yVelocity;
 
 
 public:
@@ -72,19 +73,25 @@ public:
 	Spike(int _x, int _y, sf::Color color);
 
 	void draw(sf::RenderWindow& window);
+	sf::FloatRect getBounds();
 };
 
 class Level : public Input
 {
 	std::vector<Block> blocks;
+	std::vector<Spike> spikes;
 	Block block1 = Block(9, 0, sf::Color::Blue);
 	Block block2 = Block(10, 0, sf::Color::Blue);
 	Block block3 = Block(12, 2, sf::Color::Blue);
-	Spike spike = Spike(11, 0, sf::Color::Blue);
+	Block block4 = Block(200, 2, sf::Color::Blue);
+
+	Spike spike1 = Spike(11, 0, sf::Color::Blue);
 	Player player;
 	sf::RectangleShape floor;
 
 	sf::FloatRect lastPosition;
+
+	sf::View view;
 
 	bool eventQueue = false;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);

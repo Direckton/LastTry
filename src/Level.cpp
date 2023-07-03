@@ -5,12 +5,14 @@ Player::Player()
 	texture.loadFromFile("res/player.png");
 	
 	sprite.setTexture(texture);
-	sprite.setOrigin(sf::Vector2f(30, 30));
+	//sprite.setOrigin(sf::Vector2f(30, 30));
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID +
 	sprite.getOrigin().y));
 
 	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
 		sprite.getOrigin().y));
+	yAcceleration = 0.5f;
+	yVelocity = 0;
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -21,16 +23,31 @@ void Player::draw(sf::RenderWindow& window)
 
 void Player::jump()
 {
-	onGround = false;
-	jumping = true;
+	if (onGround == true)
+	{
+		onGround = false;
+		yVelocity = -12;
+	}
+	if (onBlock == true)
+	{
+		onBlock = false;
+		yVelocity = -12;
+	}
 }
 
 void Player::setOnGround(int y)
 {
-	//onBlock = true;
-	onGround = true;
+	if (y == FLOOR)
+	{
+		onGround = true;
+	}
+	else
+	{
+		onBlock = true;
+	}
 	sprite.setPosition(sf::Vector2f(sprite.getPosition().x, y +
 		sprite.getOrigin().y));
+	yVelocity = 0;
 }
 
 bool Player::getOnGround()
@@ -41,38 +58,28 @@ bool Player::getOnGround()
 void Player::update()
 {
 	sprite.move(sf::Vector2f(4.f, 0.f));
-	//playerBounds.setPosition(sprite.getPosition());
 
-	//if (falling)
-	//{
-	//	falling = false;
-	//	yVelocity = 0;
-	//}
- 	if (!onGround)
+	if (!onGround)
 	{
-		//sprite.rotate(1);
- 		sprite.move(sf::Vector2f(0, yVelocity));
-		if (sprite.getGlobalBounds().top + GRID + yVelocity > FLOOR)
+		sprite.move(sf::Vector2f(0.f, yVelocity));
+		if (yVelocity < 12)
 		{
-			sprite.setPosition(sf::Vector2f(sprite.getPosition().x, FLOOR-GRID +
-				sprite.getOrigin().y));
-  			onGround = true;
-			yVelocity = 0;
+			yVelocity += 0.5;
 		}
-		yVelocity += 0.5;
+		if (sprite.getGlobalBounds().top + GRID  > FLOOR)
+		{
+			onGround = true;
+			setOnGround(FLOOR-GRID);
+		}
 	}
-	else
-	{
-		yVelocity = -12;
-		
-	}
-
+	
+	
 
 }
 
 void Player::gravity()
 {
-	onGround = false;
+	falling = true;
 }
 
 void Player::reset()
@@ -153,6 +160,7 @@ Spike::Spike(int _x, int _y ,sf::Color color)
 	triangle[1].color = sf::Color::Black;
 	triangle[2].color = color;
 
+
 	tx.loadFromFile("res/triangle_glow.png");
 
 	sp.setTexture(tx);
@@ -162,23 +170,32 @@ Spike::Spike(int _x, int _y ,sf::Color color)
 
 void Spike::draw(sf::RenderWindow& window)
 {
+	
 	window.draw(triangle);
 	window.draw(sp);
 	//window.draw(tri);
 }
 
+sf::FloatRect Spike::getBounds()
+{
+	return triangle.getBounds();
+}
 
 Level::Level()
 {
 
-	floor.setSize(sf::Vector2f(1280, 3));
+	floor.setSize(sf::Vector2f(1400, 3));
 	floor.setFillColor(sf::Color::White);
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
+
 	blocks.push_back(block1);
 	blocks.push_back(block2);
 	blocks.push_back(block3);
+	blocks.push_back(block4);
+
+	spikes.push_back(spike1);
 }
 
 Level::~Level()
@@ -189,8 +206,14 @@ Level::~Level()
 void Level::draw(sf::RenderWindow& window)
 {
 	update();
-	sf::View view(sf::FloatRect(0, 0, 1280, 720));
+	view = window.getDefaultView();
 	
+	if (player.getBounds().left + GRID / 2 > view.getCenter().x)
+	{
+		view.setCenter(sf::Vector2f(player.getBounds().left + GRID / 2,
+			720/2));
+	}
+
 	window.setView(view);
 	
 	window.clear(sf::Color::Black);
@@ -198,7 +221,10 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		block.draw(window);
 	}
-	spike.draw(window);
+	for (auto spike : spikes)
+	{
+		spike.draw(window);
+	}
 	player.draw(window);
 	window.draw(floor);
 
@@ -221,9 +247,16 @@ void Level::update()
 		}
 
 	}
-	bool flag = false;
 
+	//SCENE UPDATE
+	floor.setPosition(sf::Vector2f(view.getCenter().x - floor.getSize().x / 2,
+		FLOOR));
+	
+	
 	//COLISSION DETECTION
+	bool flag = false, prime = false; 
+	
+
 	for (auto block : blocks)
 	{
 		if (player.getBounds().intersects(block.getBounds()))
@@ -243,24 +276,34 @@ void Level::update()
 			}
 				
 		}
-		if (block.getBounds().left + GRID < player.getBounds().left &&
-			player.getBounds().top < FLOOR - GRID)
+		
+
+		sf::FloatRect playerBounds = player.getBounds();
+		playerBounds.top = player.getBounds().top + 1;
+		if (block.getBounds().intersects(playerBounds))
+		{
+			flag = false;
+
+		} 
+		else
 		{
 			flag = true;
 		}
-		else
-		{
-			flag = false;
-		}
+
+		
 
 	}
+	for (auto spike : spikes)
+	{
+		if (player.getBounds().intersects(spike.getBounds()))
+		{
+			player.reset();
+		}
+	}
+
 	if (flag)
 	{
 		player.gravity();
-	}
-	if (player.getBounds().left > 1200)
-	{
-		player.reset();
 	}
 	//GRAVITY
 
@@ -275,6 +318,6 @@ void Level::space()
 	
 	start = std::chrono::high_resolution_clock::now();
 	eventQueue = true;
-	//player.jump();
+	player.jump();
 	
 }
