@@ -14,21 +14,25 @@ Fileloader::Fileloader()
 		data = json::parse(fs);
 
 	}
-	int value =0;
+	std::string value;
 	try
 	{
-		value = data["level"]["blocks"]["block"]["y"].get<int>();
-
+		//just iterate throug that and put it into vector or something
+		auto x = data["blocks"].get<json::array_t>();
+		std::cout << x[1].at("x");
+		std::cout << x[1].at("y");
 	}
-	catch (json::type_error &t)
+	catch (json::exception &e)
 	{
-		//std::cerr << "error" << std::endl;
+		std::cout << e.what() << std::endl;
 
 	}
 
-	for (auto it = data["blocks"].begin(); it != data["blocks"].end(); it++)
+	/*for (auto it = data["blocks"].begin(); it != data["blocks"].end(); it++)
 	{
-		std::cout << it.value();
+		std::cout << std::setw(2)<<  it.value();
+		json iData = it.value();
+		std::cout << iData["x"].get<int>();
 
-	}
+	}*/
 }
