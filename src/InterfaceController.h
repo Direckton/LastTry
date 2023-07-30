@@ -402,6 +402,7 @@ public:
 		}
 		case 4:
 		{
+			level->~Level();
 			goBackToMenu();
 			break;
 		}

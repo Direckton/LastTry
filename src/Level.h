@@ -80,7 +80,7 @@ public:
 class Level : public Input
 {
 	std::vector<Block *> blocks;
-	std::vector<Spike> spikes;
+	std::vector<Spike *> spikes;
 	Block block1 = Block(9, 0, sf::Color::Blue);
 	Block block2 = Block(10, 0, sf::Color::Blue);
 	Block block3 = Block(12, 2, sf::Color::Blue);

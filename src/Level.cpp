@@ -197,7 +197,7 @@ Level::Level()
 
 	loadBlocks();
 
-	spikes.push_back(spike1);
+	//spikes.push_back(spike1);
 }
 
 Level::~Level()
@@ -209,11 +209,19 @@ void Level::loadBlocks()
 {
 	Fileloader file;
 	json data = file.getJson("res/json/LEVEL1.json");
-	auto coordinates = file.getCoordinates(data);
+	auto coordinates = file.getBlockCoordinates(data);
+	auto rgb = file.getColor(data);
+	sf::Color c(rgb[0],rgb[1],rgb[2]);
 	for (int i =0; i< coordinates.size();i++)
 	{
 		blocks.push_back(new Block(coordinates[i].first, coordinates[i].second,
-			sf::Color::Red));
+			c));
+	}
+	coordinates = file.getSpikeCoordinates(data);
+	for (int i = 0; i < coordinates.size(); i++)
+	{
+		spikes.push_back(new Spike(coordinates[i].first, coordinates[i].second,
+			c));
 	}
 }
 
@@ -235,9 +243,9 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		(*it)->draw(window);
 	}
-	for (auto spike : spikes)
+	for (auto it = spikes.begin(); it != spikes.end(); it++)
 	{
-		spike.draw(window);
+		(*it)->draw(window);
 	}
 	player.draw(window);
 	window.draw(floor);
@@ -307,9 +315,9 @@ void Level::update()
 		
 
 	}
-	for (auto spike : spikes)
+	for (auto it = spikes.begin(); it != spikes.end(); it++)
 	{
-		if (player.getBounds().intersects(spike.getBounds()))
+		if (player.getBounds().intersects((*it)->getBounds()))
 		{
 			player.reset();
 		}
