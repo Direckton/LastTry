@@ -20,8 +20,6 @@ using namespace sf;
 int main()
 {
 
-    Fileloader fl;
-    return 0;
     ContextSettings CSettings;
     CSettings.antialiasingLevel = 8;
 

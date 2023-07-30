@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
+#include "FileLoader.h"
 #include <math.h>
 #include <chrono>
 
@@ -78,7 +79,7 @@ public:
 
 class Level : public Input
 {
-	std::vector<Block> blocks;
+	std::vector<Block *> blocks;
 	std::vector<Spike> spikes;
 	Block block1 = Block(9, 0, sf::Color::Blue);
 	Block block2 = Block(10, 0, sf::Color::Blue);
@@ -104,6 +105,7 @@ public:
 	Level();
 	~Level();
 
+	void loadBlocks();
 	void draw(sf::RenderWindow& window);
 	void space();
 	void update();

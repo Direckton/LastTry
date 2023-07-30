@@ -12,4 +12,8 @@ private:
 public:
 	Fileloader();
 	~Fileloader() {}
+
+	json getJson(std::string name);
+	std::vector<std::pair<int, int>> getCoordinates(json& data);
+
 };

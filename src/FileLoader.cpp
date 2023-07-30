@@ -36,3 +36,36 @@ Fileloader::Fileloader()
 
 	}*/
 }
+
+json Fileloader::getJson( std::string name)
+{
+	json data;
+	std::ifstream fs(name);
+	if (fs.is_open())
+	{
+		data = json::parse(fs);
+	}
+	fs.close();
+	return data;
+}
+
+std::vector<std::pair<int, int>> Fileloader::getCoordinates(json &data)
+{
+	std::vector<std::pair<int, int>> output;
+	try
+	{
+		//just iterate throug that and put it into vector or something
+		auto coordinates = data["blocks"].get<json::array_t>();
+		for (int i = 0; i < coordinates.size(); i++)
+		{
+			int x = coordinates[i].at("x");
+			int y = coordinates[i].at("y");
+			output.push_back(std::pair<int, int>(x,y));
+		}
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return output;
+}

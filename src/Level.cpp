@@ -190,10 +190,12 @@ Level::Level()
 	floor.setPosition(0, FLOOR);
 
 
-	blocks.push_back(block1);
+	/*blocks.push_back(block1);
 	blocks.push_back(block2);
 	blocks.push_back(block3);
-	blocks.push_back(block4);
+	blocks.push_back(block4);*/
+
+	loadBlocks();
 
 	spikes.push_back(spike1);
 }
@@ -201,6 +203,18 @@ Level::Level()
 Level::~Level()
 {
 
+}
+
+void Level::loadBlocks()
+{
+	Fileloader file;
+	json data = file.getJson("res/json/LEVEL1.json");
+	auto coordinates = file.getCoordinates(data);
+	for (int i =0; i< coordinates.size();i++)
+	{
+		blocks.push_back(new Block(coordinates[i].first, coordinates[i].second,
+			sf::Color::Red));
+	}
 }
 
 void Level::draw(sf::RenderWindow& window)
@@ -217,9 +231,9 @@ void Level::draw(sf::RenderWindow& window)
 	window.setView(view);
 	
 	window.clear(sf::Color::Black);
-	for (auto block : blocks)
+	for (auto it = blocks.begin(); it!= blocks.end();it++)
 	{
-		block.draw(window);
+		(*it)->draw(window);
 	}
 	for (auto spike : spikes)
 	{
@@ -257,18 +271,18 @@ void Level::update()
 	bool flag = false, prime = false; 
 	
 
-	for (auto block : blocks)
+	for (auto it = blocks.begin(); it != blocks.end(); it++)
 	{
-		if (player.getBounds().intersects(block.getBounds()))
+		if (player.getBounds().intersects((*it)->getBounds()))
 		{
 			//i dont like how it's made but i have no ide how to change it
 			//without changing all the objects
 			if (!player.getOnGround() &&
-				block.getBounds().top > player.getBounds().top &&
-				player.getBounds().top < block.getBounds().top -
+				(*it)->getBounds().top > player.getBounds().top &&
+				player.getBounds().top < (*it)->getBounds().top -
 				GRID + 20)
 			{
-				player.setOnGround(block.getBounds().top - GRID);
+				player.setOnGround((*it)->getBounds().top - GRID);
 			}
 			else
 			{
@@ -280,7 +294,7 @@ void Level::update()
 
 		sf::FloatRect playerBounds = player.getBounds();
 		playerBounds.top = player.getBounds().top + 1;
-		if (block.getBounds().intersects(playerBounds))
+		if ((*it)->getBounds().intersects(playerBounds))
 		{
 			flag = false;
 
