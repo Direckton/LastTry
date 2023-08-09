@@ -46,12 +46,18 @@ Selector::Selector(int _width, int _height)
 {
 	width = _width;
 	height = _height;
-	for (int i = 0; i < 10; i++)
+
+	int i = 0;
+	const fs::path levelPath{ "res/json/level" };
+	for (auto const& dir_entry : std::filesystem::directory_iterator{ levelPath })
 	{
-		std::string name = "LEVEL " + std::to_string(i+1);
+		std::string name = dir_entry.path().stem().string();
+		levelNames.push_back(dir_entry.path().filename().string());
 		level = new LevelInstance(width, _height, i*width ,name);
 		levels.push_back(level);
+		i++;
 	}
+
 
 	levelInFocus = 0;
 	view.reset(sf::FloatRect(0, 0, _width, _height));
@@ -114,6 +120,12 @@ void Selector::moveLeft()
 
 void Selector::select()
 {
+
 	//spawn level
 	//levele itself handles fileloading
+}
+
+std::string Selector::getLevelName()
+{
+	return levelNames[levelInFocus];
 }

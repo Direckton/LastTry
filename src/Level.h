@@ -4,6 +4,8 @@
 #include "FileLoader.h"
 #include <math.h>
 #include <chrono>
+#include <thread>
+		
 
 #define GRID 60
 #define FLOOR 600
@@ -77,22 +79,35 @@ public:
 	sf::FloatRect getBounds();
 };
 
+class Finish
+{
+	int x;
+
+	sf::VertexArray gradient;
+
+public:
+	Finish() {};
+	Finish(int _x);
+	~Finish() {};
+
+	void draw(sf::RenderWindow& window);
+
+};
+
 class Level : public Input
 {
+	std::string levelName;
 	std::vector<Block *> blocks;
 	std::vector<Spike *> spikes;
-	Block block1 = Block(9, 0, sf::Color::Blue);
-	Block block2 = Block(10, 0, sf::Color::Blue);
-	Block block3 = Block(12, 2, sf::Color::Blue);
-	Block block4 = Block(200, 2, sf::Color::Blue);
 
-	Spike spike1 = Spike(11, 0, sf::Color::Blue);
 	Player player;
+	Finish finish;
 	sf::RectangleShape floor;
 
 	sf::FloatRect lastPosition;
 
 	sf::View view;
+
 
 	bool eventQueue = false;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);
@@ -102,10 +117,13 @@ class Level : public Input
 
 
 public:
-	Level();
+	Level() {};
+	Level(std::string name);
 	~Level();
 
-	void loadBlocks();
+	void loadLevel();
+	void loadBlocks(std::vector<std::pair<int, int>> coordinates, sf::Color c);
+	void loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c);
 	void draw(sf::RenderWindow& window);
 	void space();
 	void update();

@@ -290,7 +290,7 @@ public:
 	{
 		if (level == nullptr)
 		{
-			level = new Level(); //add level number through selector.getLevelIndex
+			level = new Level((*selector).getLevelName()); //add level number through selector.getLevelIndex
 		}
 		interface = 4;
 	}
@@ -338,6 +338,7 @@ public:
 		{
 			//exit selections
 			exitSelections();
+			break;
 
 		}
 		case 3:
@@ -363,8 +364,26 @@ public:
 
 	void goBackToMenu()
 	{
-		//settings->menu
-		//delete settings;
+		if (settings != nullptr)
+		{
+			delete settings;
+			settings = nullptr;
+		}
+		if (exit != nullptr)
+		{
+			delete exit;
+			exit = nullptr;
+		}
+		if (selector != nullptr)
+		{
+			delete selector;
+			selector = nullptr;
+		}
+		if (level != nullptr)
+		{
+			delete level;
+			level = nullptr;
+		}
 		
 		if (menu == nullptr)
 		{

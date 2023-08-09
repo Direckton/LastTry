@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 class LevelInstance 
 {
@@ -21,6 +24,7 @@ class Selector : public Input
 {
 	LevelInstance *level;
 	std::vector<LevelInstance *> levels;
+	std::vector<std::string> levelNames;
 	sf::View view;
 	unsigned levelInFocus;
 	bool viewMovingRight = false, viewMovingLeft = false;
@@ -37,4 +41,5 @@ public:
 	void moveRight();
 	void moveLeft();
 	void select();
+	std::string getLevelName();
 };

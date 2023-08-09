@@ -8,7 +8,7 @@ struct block
 Fileloader::Fileloader()
 {
 	json data;
-	std::ifstream fs("res/json/LEVEL1.json");
+	std::ifstream fs("res/json/level/LEVEL1.json");
 	if (fs.is_open())
 	{
 		data = json::parse(fs);

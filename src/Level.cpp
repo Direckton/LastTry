@@ -181,48 +181,102 @@ sf::FloatRect Spike::getBounds()
 	return triangle.getBounds();
 }
 
-Level::Level()
+Finish::Finish(int _x)
 {
+	x = _x * GRID;
 
+	gradient = sf::VertexArray(sf::Quads, 4);
+
+	gradient[0].position = sf::Vector2f(x-100, 0);
+	gradient[1].position = sf::Vector2f(x, 0);
+	gradient[2].position = sf::Vector2f(x, FLOOR);
+	gradient[3].position = sf::Vector2f(x-100, FLOOR);
+
+	gradient[0].color = sf::Color::Transparent;
+	gradient[1].color = sf::Color::White;
+	gradient[2].color = sf::Color::White;
+	gradient[3].color = sf::Color::Transparent;
+
+}
+
+void Finish::draw(sf::RenderWindow &window)
+{
+	window.draw(gradient);
+}
+
+Level::Level(std::string name)
+{
+	levelName = name;
 	floor.setSize(sf::Vector2f(1400, 3));
 	floor.setFillColor(sf::Color::White);
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
+	finish = Finish(20);
 
-	/*blocks.push_back(block1);
-	blocks.push_back(block2);
-	blocks.push_back(block3);
-	blocks.push_back(block4);*/
+	loadLevel();
 
-	loadBlocks();
-
-	//spikes.push_back(spike1);
 }
 
 Level::~Level()
 {
+	for (auto b : blocks)
+	{
+		delete b;
+	}
+	blocks.clear();
+	for (auto s : spikes)
+	{
+		delete s;
+	}
+	spikes.clear();
+}
+
+void Level::loadLevel()
+{
+	Fileloader file;
+	//TODO change to dynamic level selection based on index
+	if (levelName != "LEVEL2.json")
+	{
+		std::cout << "pizda";
+	}
+	json data = file.getJson("res/json/level/" + levelName);
+	auto BlockCoordinates = file.getBlockCoordinates(data);
+	auto rgb = file.getColor(data);
+	sf::Color c(rgb[0],rgb[1],rgb[2]);
+	auto SpikeCoordinates = file.getSpikeCoordinates(data);
+	std::thread t1(&Level::loadBlocks,this, BlockCoordinates, c);
+	std::thread t2(&Level::loadSpikes,this, SpikeCoordinates, c);
+	t1.join();
+	t2.join();
 
 }
 
-void Level::loadBlocks()
+void Level::loadBlocks(std::vector<std::pair<int,int>> coordinates, sf::Color c)
 {
-	Fileloader file;
-	json data = file.getJson("res/json/LEVEL1.json");
-	auto coordinates = file.getBlockCoordinates(data);
-	auto rgb = file.getColor(data);
-	sf::Color c(rgb[0],rgb[1],rgb[2]);
-	for (int i =0; i< coordinates.size();i++)
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < coordinates.size(); i++)
 	{
 		blocks.push_back(new Block(coordinates[i].first, coordinates[i].second,
 			c));
 	}
-	coordinates = file.getSpikeCoordinates(data);
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	std::cout << "Blocks done in: " << duration.count() << " ms" << std::endl;
+}
+
+void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c)
+{
+	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < coordinates.size(); i++)
 	{
 		spikes.push_back(new Spike(coordinates[i].first, coordinates[i].second,
 			c));
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	std::cout << "Spikes done in: " << duration.count() << " ms" << std::endl;
+
 }
 
 void Level::draw(sf::RenderWindow& window)
@@ -249,8 +303,8 @@ void Level::draw(sf::RenderWindow& window)
 	}
 	player.draw(window);
 	window.draw(floor);
+	finish.draw(window);
 
-	
 }
 
 void Level::update()
