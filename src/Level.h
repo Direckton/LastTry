@@ -5,7 +5,6 @@
 #include <math.h>
 #include <chrono>
 #include <thread>
-		
 
 #define GRID 60
 #define FLOOR 600
@@ -14,9 +13,11 @@ class Player
 {
 	sf::Sprite sprite;
 	sf::Texture texture;
+	sf::CircleShape circle;
 	int x, y;
 	bool onGround = true;
 	bool onBlock = true;
+	bool blownUp = false;
 
 	float pi = 3.14159265359f;
 	float yDelta = 0;
@@ -43,6 +44,8 @@ public:
 	void gravity();
 	//DEBUG
 	void changeColor(sf::Color color) { sprite.setColor(color); }
+	
+	void blowUp();
 };
 
 class Block
@@ -91,6 +94,7 @@ public:
 	~Finish() {};
 
 	void draw(sf::RenderWindow& window);
+	sf::FloatRect getBounds();
 
 };
 
@@ -108,8 +112,11 @@ class Level : public Input
 
 	sf::View view;
 
+	sf::Vector2f levelView{640,360};
+
 
 	bool eventQueue = false;
+	bool updateLevel = true;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);
 	std::chrono::high_resolution_clock::time_point start;
 	std::chrono::high_resolution_clock::time_point end;
@@ -127,5 +134,6 @@ public:
 	void draw(sf::RenderWindow& window);
 	void space();
 	void update();
+	void finished();
 };
 

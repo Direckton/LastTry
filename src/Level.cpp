@@ -9,6 +9,7 @@ Player::Player()
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID +
 	sprite.getOrigin().y));
 
+	//sprite.setPosition(sprite.getPosition().x, -20);
 	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
 		sprite.getOrigin().y));
 	yAcceleration = 0.5f;
@@ -17,7 +18,8 @@ Player::Player()
 
 void Player::draw(sf::RenderWindow& window)
 {
-	update();
+	//update();
+	window.draw(circle);
 	window.draw(sprite);
 }
 
@@ -57,6 +59,25 @@ bool Player::getOnGround()
 
 void Player::update()
 {
+	if (blownUp)
+	{
+
+		circle.setScale(circle.getScale().x + 0.05, 
+			circle.getScale().y + 0.05);
+		if (circle.getFillColor().a - 5 > 0)
+		{
+		circle.setFillColor(sf::Color(circle.getFillColor().r,
+			circle.getFillColor().g,
+			circle.getFillColor().b,
+			circle.getFillColor().a-5));
+
+		}
+		else
+		{
+			circle.setFillColor(sf::Color::Transparent);
+		}
+		return;
+	}
 	sprite.move(sf::Vector2f(4.f, 0.f));
 
 	if (!onGround)
@@ -86,10 +107,11 @@ void Player::reset()
 {
 	onGround = true;
 	yDelta = 0;
+	blowUp();
+	//if main is threaded this might break
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID + 
 		sprite.getOrigin().y));
 	sprite.setRotation(0);
-
 }
 
 sf::FloatRect Player::getBounds()
@@ -100,6 +122,19 @@ sf::FloatRect Player::getBounds()
 void Player::playerMove(float x, float y)
 {
 	sprite.move(x, y);
+}
+
+void Player::blowUp()
+{
+	sprite.setScale(sf::Vector2f(0, 0));
+	circle.setFillColor(sf::Color::White);
+	circle.setRadius(70.f);
+	circle.setOrigin(GRID,GRID);
+	circle.setScale(0.5,0.5);
+	circle.setPosition(sf::Vector2f(sprite.getPosition().x,
+		sprite.getPosition().y));
+
+	blownUp = true;
 }
 
 Block::Block(int _x, int _y, const sf::Color& color)
@@ -197,6 +232,13 @@ Finish::Finish(int _x)
 	gradient[2].color = sf::Color::White;
 	gradient[3].color = sf::Color::Transparent;
 
+	
+
+}
+
+sf::FloatRect Finish::getBounds()
+{
+	return gradient.getBounds();
 }
 
 void Finish::draw(sf::RenderWindow &window)
@@ -212,7 +254,7 @@ Level::Level(std::string name)
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
-	finish = Finish(20);
+	finish = Finish(80);
 
 	loadLevel();
 
@@ -281,14 +323,41 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 
 void Level::draw(sf::RenderWindow& window)
 {
-	update();
+	finished();
+	if (updateLevel){
+		player.update();
+		update();
+	}
 	view = window.getDefaultView();
+	
 	
 	if (player.getBounds().left + GRID / 2 > view.getCenter().x)
 	{
-		view.setCenter(sf::Vector2f(player.getBounds().left + GRID / 2,
-			720/2));
+		levelView.x = player.getBounds().left + GRID / 2;
 	}
+
+	if (player.getBounds().top + GRID / 2 < 360)
+	{
+  		levelView.y = std::min(player.getBounds().top + GRID / 2,
+				levelView.y);
+	}
+	if (player.getBounds().top + GRID / 2 > levelView.y + 250)
+	{
+		//sketchy af but ok
+		levelView.y += 12;
+
+	}
+	if (player.getOnGround() && levelView.y != 360)
+	{
+		levelView.y++;
+	}
+
+	if (levelView != sf::Vector2f(-1, -1))
+	{
+		view.setCenter(levelView);
+
+	}
+
 
 	window.setView(view);
 	
@@ -301,14 +370,15 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		(*it)->draw(window);
 	}
-	player.draw(window);
 	window.draw(floor);
+	player.draw(window);
 	finish.draw(window);
 
 }
 
 void Level::update()
 {
+	
 	//PLAYER EVENT QUEUEING
 	if (eventQueue)
 	{
@@ -383,6 +453,17 @@ void Level::update()
 	}
 	//GRAVITY
 
+}
+
+
+void Level::finished()
+{
+	if (player.getBounds().left > finish.getBounds().left - 4 * GRID)
+	{
+		updateLevel = false;
+		
+		
+	}
 }
 
 void Level::space()

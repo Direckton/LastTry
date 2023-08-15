@@ -32,6 +32,9 @@ int main()
     
 
     view.reset(sf::FloatRect(0, 0, WIDTH, HEIGHT));
+
+
+    view.getCenter();
     window.setView(view);
 
     music.playMusic("res/sounds/Sweden.wav");
