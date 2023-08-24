@@ -59,9 +59,11 @@ bool Player::getOnGround()
 
 void Player::update()
 {
-	if (blownUp)
+	if (blownUp && 
+		animationLenght + std::chrono::milliseconds(500) > 
+		std::chrono::high_resolution_clock::now())
 	{
-
+		
 		circle.setScale(circle.getScale().x + 0.05, 
 			circle.getScale().y + 0.05);
 		if (circle.getFillColor().a - 5 > 0)
@@ -75,6 +77,8 @@ void Player::update()
 		else
 		{
 			circle.setFillColor(sf::Color::Transparent);
+			blownUp = false;
+			sprite.setScale(sf::Vector2f(1, 1));
 		}
 		return;
 	}
@@ -135,6 +139,7 @@ void Player::blowUp()
 		sprite.getPosition().y));
 
 	blownUp = true;
+	animationLenght = std::chrono::high_resolution_clock::now();
 }
 
 Block::Block(int _x, int _y, const sf::Color& color)

@@ -24,6 +24,8 @@ class Player
 
 	float yAcceleration, yVelocity;
 
+	std::chrono::high_resolution_clock::time_point animationLenght;
+
 
 public:
 	sf::RectangleShape playerBounds;
