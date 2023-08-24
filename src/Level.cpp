@@ -78,6 +78,9 @@ void Player::update()
 		{
 			circle.setFillColor(sf::Color::Transparent);
 			blownUp = false;
+			sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
+				sprite.getOrigin().y));
+			sprite.setRotation(0);
 			sprite.setScale(sf::Vector2f(1, 1));
 		}
 		return;
@@ -102,6 +105,11 @@ void Player::update()
 
 }
 
+bool Player::getAnimationEnded()
+{
+	return blownUp;
+}
+
 void Player::gravity()
 {
 	falling = true;
@@ -113,9 +121,7 @@ void Player::reset()
 	yDelta = 0;
 	blowUp();
 	//if main is threaded this might break
-	sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID + 
-		sprite.getOrigin().y));
-	sprite.setRotation(0);
+	
 }
 
 sf::FloatRect Player::getBounds()
@@ -336,6 +342,7 @@ void Level::draw(sf::RenderWindow& window)
 	view = window.getDefaultView();
 	
 	
+	
 	if (player.getBounds().left + GRID / 2 > view.getCenter().x)
 	{
 		levelView.x = player.getBounds().left + GRID / 2;
@@ -361,6 +368,10 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		view.setCenter(levelView);
 
+	}
+	if (player.getBounds().left < view.getCenter().x)
+	{
+		levelView = sf::Vector2f(640, 360);
 	}
 
 

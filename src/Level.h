@@ -48,6 +48,7 @@ public:
 	void changeColor(sf::Color color) { sprite.setColor(color); }
 	
 	void blowUp();
+	bool getAnimationEnded();
 };
 
 class Block
