@@ -59,30 +59,8 @@ bool Player::getOnGround()
 
 void Player::update()
 {
-	if (blownUp && 
-		animationLenght + std::chrono::milliseconds(500) > 
-		std::chrono::high_resolution_clock::now())
+	if (blowUp())
 	{
-		
-		circle.setScale(circle.getScale().x + 0.05, 
-			circle.getScale().y + 0.05);
-		if (circle.getFillColor().a - 5 > 0)
-		{
-		circle.setFillColor(sf::Color(circle.getFillColor().r,
-			circle.getFillColor().g,
-			circle.getFillColor().b,
-			circle.getFillColor().a-5));
-
-		}
-		else
-		{
-			circle.setFillColor(sf::Color::Transparent);
-			blownUp = false;
-			sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
-				sprite.getOrigin().y));
-			sprite.setRotation(0);
-			sprite.setScale(sf::Vector2f(1, 1));
-		}
 		return;
 	}
 	sprite.move(sf::Vector2f(4.f, 0.f));
@@ -119,7 +97,7 @@ void Player::reset()
 {
 	onGround = true;
 	yDelta = 0;
-	blowUp();
+	InitalizeBlowUp();
 	//if main is threaded this might break
 	
 }
@@ -134,7 +112,7 @@ void Player::playerMove(float x, float y)
 	sprite.move(x, y);
 }
 
-void Player::blowUp()
+void Player::InitalizeBlowUp()
 {
 	sprite.setScale(sf::Vector2f(0, 0));
 	circle.setFillColor(sf::Color::White);
@@ -146,6 +124,51 @@ void Player::blowUp()
 
 	blownUp = true;
 	animationLenght = std::chrono::high_resolution_clock::now();
+}
+
+bool Player::blowUp()
+{
+	if (blownUp &&
+		animationLenght + std::chrono::milliseconds(500) >
+		std::chrono::high_resolution_clock::now())
+	{
+
+		circle.setScale(circle.getScale().x + 0.05,
+			circle.getScale().y + 0.05);
+		if (circle.getFillColor().a - 5 > 0)
+		{
+			circle.setFillColor(sf::Color(circle.getFillColor().r,
+				circle.getFillColor().g,
+				circle.getFillColor().b,
+				circle.getFillColor().a - 5));
+
+		}
+		else
+		{
+			circle.setFillColor(sf::Color::Transparent);
+			blownUp = false;
+			sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
+				sprite.getOrigin().y));
+			sprite.setRotation(0);
+			sprite.setScale(sf::Vector2f(1, 1));
+		}
+		return true;
+	}
+	return false;
+}
+
+void Player::finishAnimation()
+{
+	if (animationAcc < 3)
+	{
+		animationAcc += 0.1f;
+	}
+	if (rotationAcc < 3)
+	{
+		rotationAcc += 0.1f;
+	}
+	sprite.move(animationAcc, -2);
+	sprite.rotate(rotationAcc);
 }
 
 Block::Block(int _x, int _y, const sf::Color& color)
@@ -233,8 +256,8 @@ Finish::Finish(int _x)
 
 	gradient = sf::VertexArray(sf::Quads, 4);
 
-	gradient[0].position = sf::Vector2f(x-100, 0);
-	gradient[1].position = sf::Vector2f(x, 0);
+	gradient[0].position = sf::Vector2f(x-100, -1280);
+	gradient[1].position = sf::Vector2f(x, -1280);
 	gradient[2].position = sf::Vector2f(x, FLOOR);
 	gradient[3].position = sf::Vector2f(x-100, FLOOR);
 
@@ -265,7 +288,7 @@ Level::Level(std::string name)
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
-	finish = Finish(80);
+	finish = Finish(35);
 
 	loadLevel();
 
@@ -335,11 +358,13 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 void Level::draw(sf::RenderWindow& window)
 {
 	finished();
-	if (updateLevel){
-		player.update();
+	if (updateLevel)
+
+	{
 		update();
+		player.update();
 	}
-	view = window.getDefaultView();
+		view = window.getDefaultView();
 	
 	
 	
@@ -478,7 +503,15 @@ void Level::finished()
 	{
 		updateLevel = false;
 		
-		
+	}
+	if (!updateLevel)
+	{
+		player.finishAnimation();
+		if (player.getBounds().left + GRID > finish.getBounds().left + 50)
+		{
+			player.InitalizeBlowUp();
+			//player.blowUp();
+		}
 	}
 }
 

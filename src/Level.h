@@ -23,6 +23,7 @@ class Player
 	float yDelta = 0;
 
 	float yAcceleration, yVelocity;
+	float animationAcc = 0, rotationAcc =0;
 
 	std::chrono::high_resolution_clock::time_point animationLenght;
 
@@ -47,8 +48,10 @@ public:
 	//DEBUG
 	void changeColor(sf::Color color) { sprite.setColor(color); }
 	
-	void blowUp();
+	void InitalizeBlowUp();
+	bool blowUp();
 	bool getAnimationEnded();
+	void finishAnimation();
 };
 
 class Block
