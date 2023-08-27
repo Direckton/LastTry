@@ -120,6 +120,9 @@ class Level : public Input
 
 	sf::Vector2f levelView{640,360};
 
+	sf::Text text;
+	sf::Font font;
+
 
 	bool eventQueue = false;
 	bool updateLevel = true;
@@ -140,6 +143,6 @@ public:
 	void draw(sf::RenderWindow& window);
 	void space();
 	void update();
-	void finished();
+	bool finished();
 };
 

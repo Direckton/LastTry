@@ -59,8 +59,9 @@ bool Player::getOnGround()
 
 void Player::update()
 {
-	if (blowUp())
+	if (blownUp)
 	{
+		blowUp();
 		return;
 	}
 	sprite.move(sf::Vector2f(4.f, 0.f));
@@ -128,9 +129,7 @@ void Player::InitalizeBlowUp()
 
 bool Player::blowUp()
 {
-	if (blownUp &&
-		animationLenght + std::chrono::milliseconds(500) >
-		std::chrono::high_resolution_clock::now())
+	if (blownUp)
 	{
 
 		circle.setScale(circle.getScale().x + 0.05,
@@ -151,8 +150,8 @@ bool Player::blowUp()
 				sprite.getOrigin().y));
 			sprite.setRotation(0);
 			sprite.setScale(sf::Vector2f(1, 1));
+			return true;
 		}
-		return true;
 	}
 	return false;
 }
@@ -357,50 +356,69 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 
 void Level::draw(sf::RenderWindow& window)
 {
-	finished();
+	update();
 	if (updateLevel)
-
 	{
-		update();
 		player.update();
+
 	}
-		view = window.getDefaultView();
+	else
+	{
+		if(player.blowUp());
+		{
+		}
+		
+			//trigger LEVEL COMPLATE sequence
+			if (!font.loadFromFile("OXYGENE1.ttf"))
+			{
+				std::cout << "Error while loading font!";
+			}
+			text.setFont(font);
+			text.setFillColor(sf::Color::White);
+			text.setCharacterSize(60);
+			text.setString("LEVEL COMPLATE");
+			text.setPosition(view.getCenter());
+		
+	}
+
+	view = window.getDefaultView();
 	
-	
-	
-	if (player.getBounds().left + GRID / 2 > view.getCenter().x)
-	{
-		levelView.x = player.getBounds().left + GRID / 2;
-	}
 
-	if (player.getBounds().top + GRID / 2 < 360)
+	if (updateLevel)
 	{
-  		levelView.y = std::min(player.getBounds().top + GRID / 2,
-				levelView.y);
-	}
-	if (player.getBounds().top + GRID / 2 > levelView.y + 250)
-	{
-		//sketchy af but ok
-		levelView.y += 12;
+		if (player.getBounds().left + GRID / 2 > view.getCenter().x)
+		{
+			levelView.x = player.getBounds().left + GRID / 2;
+		}
+
+		if (player.getBounds().top + GRID / 2 < 360)
+		{
+  			levelView.y = std::min(player.getBounds().top + GRID / 2,
+					levelView.y);
+		}
+		if (player.getBounds().top + GRID / 2 > levelView.y + 250)
+		{
+			//sketchy af but ok
+			levelView.y += 12;
+
+		}
+		if (player.getOnGround() && levelView.y != 360)
+		{
+			levelView.y++;
+		}
+
+		if (levelView != sf::Vector2f(-1, -1))
+		{
+			view.setCenter(levelView);
+
+		}
+		if (player.getBounds().left < view.getCenter().x)
+		{
+			levelView = sf::Vector2f(640, 360);
+		}
+		window.setView(view);
 
 	}
-	if (player.getOnGround() && levelView.y != 360)
-	{
-		levelView.y++;
-	}
-
-	if (levelView != sf::Vector2f(-1, -1))
-	{
-		view.setCenter(levelView);
-
-	}
-	if (player.getBounds().left < view.getCenter().x)
-	{
-		levelView = sf::Vector2f(640, 360);
-	}
-
-
-	window.setView(view);
 	
 	window.clear(sf::Color::Black);
 	for (auto it = blocks.begin(); it!= blocks.end();it++)
@@ -411,6 +429,8 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		(*it)->draw(window);
 	}
+
+	window.draw(text);
 	window.draw(floor);
 	player.draw(window);
 	finish.draw(window);
@@ -419,7 +439,10 @@ void Level::draw(sf::RenderWindow& window)
 
 void Level::update()
 {
-	
+	if (finished()) {
+		return;
+	}
+
 	//PLAYER EVENT QUEUEING
 	if (eventQueue)
 	{
@@ -497,7 +520,7 @@ void Level::update()
 }
 
 
-void Level::finished()
+bool Level::finished()
 {
 	if (player.getBounds().left > finish.getBounds().left - 4 * GRID)
 	{
@@ -507,12 +530,17 @@ void Level::finished()
 	if (!updateLevel)
 	{
 		player.finishAnimation();
-		if (player.getBounds().left + GRID > finish.getBounds().left + 50)
+		
+		if (player.getBounds().left + GRID > finish.getBounds().left +95 &&
+			player.getBounds().left + GRID < finish.getBounds().left +100)
 		{
+			//player.reset();
 			player.InitalizeBlowUp();
 			//player.blowUp();
 		}
+		return true;
 	}
+	return false;
 }
 
 void Level::space()
