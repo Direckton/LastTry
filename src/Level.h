@@ -120,8 +120,8 @@ class Level : public Input
 
 	sf::Vector2f levelView{640,360};
 
+	sf::Font* font = new sf::Font;
 	sf::Text text;
-	sf::Font font;
 
 
 	bool eventQueue = false;

@@ -287,11 +287,11 @@ Level::Level(std::string name)
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
-	if (!font.loadFromFile("OXYGENE1.ttf"))
+	if (!font->loadFromFile("OXYGENE1.ttf"))
 	{
 		std::cout << "Error while loading font!";
 	}
-	text.setFont(font);
+	text.setFont(*font);
 	text.setFillColor(sf::Color::White);
 	text.setCharacterSize(60);
 	text.setString("LEVEL COMPLATE");
@@ -314,6 +314,7 @@ Level::~Level()
 		delete s;
 	}
 	spikes.clear();
+	//font.getInfo();
 }
 
 void Level::loadLevel()
