@@ -287,6 +287,15 @@ Level::Level(std::string name)
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
+	if (!font.loadFromFile("OXYGENE1.ttf"))
+	{
+		std::cout << "Error while loading font!";
+	}
+	text.setFont(font);
+	text.setFillColor(sf::Color::White);
+	text.setCharacterSize(60);
+	text.setString("LEVEL COMPLATE");
+
 	finish = Finish(35);
 
 	loadLevel();
@@ -364,20 +373,10 @@ void Level::draw(sf::RenderWindow& window)
 	}
 	else
 	{
-		if(player.blowUp());
+		if (player.blowUp());
 		{
 		}
-		
-			//trigger LEVEL COMPLATE sequence
-			if (!font.loadFromFile("OXYGENE1.ttf"))
-			{
-				std::cout << "Error while loading font!";
-			}
-			text.setFont(font);
-			text.setFillColor(sf::Color::White);
-			text.setCharacterSize(60);
-			text.setString("LEVEL COMPLATE");
-			text.setPosition(view.getCenter());
+
 		
 	}
 
@@ -419,6 +418,9 @@ void Level::draw(sf::RenderWindow& window)
 		window.setView(view);
 
 	}
+
+	//trigger LEVEL COMPLATE sequence
+	
 	
 	window.clear(sf::Color::Black);
 	for (auto it = blocks.begin(); it!= blocks.end();it++)
@@ -430,7 +432,10 @@ void Level::draw(sf::RenderWindow& window)
 		(*it)->draw(window);
 	}
 
-	window.draw(text);
+	if (!updateLevel)
+	{
+		window.draw(text);
+	}
 	window.draw(floor);
 	player.draw(window);
 	finish.draw(window);
@@ -439,9 +444,12 @@ void Level::draw(sf::RenderWindow& window)
 
 void Level::update()
 {
+
+
 	if (finished()) {
 		return;
 	}
+	text.setPosition(view.getCenter().x - text.getGlobalBounds().width / 2, 360);
 
 	//PLAYER EVENT QUEUEING
 	if (eventQueue)
