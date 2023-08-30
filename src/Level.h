@@ -113,6 +113,8 @@ class Level : public Input
 	Player player;
 	Finish finish;
 	sf::RectangleShape floor;
+	sf::Texture texture;
+	sf::Sprite background;
 
 	sf::FloatRect lastPosition;
 
@@ -121,14 +123,17 @@ class Level : public Input
 	sf::Vector2f levelView{640,360};
 
 	sf::Font* font = new sf::Font;
-	sf::Text text;
+	sf::Text text, leave;
 
 
 	bool eventQueue = false;
 	bool updateLevel = true;
+
+	int textAnimation = 1;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);
 	std::chrono::high_resolution_clock::time_point start;
 	std::chrono::high_resolution_clock::time_point end;
+	std::chrono::high_resolution_clock::time_point animation;
 
 
 
@@ -144,5 +149,6 @@ public:
 	void space();
 	void update();
 	bool finished();
+	void reset();
 };
 

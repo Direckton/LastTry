@@ -287,14 +287,33 @@ Level::Level(std::string name)
 	floor.setOutlineThickness(0);
 	floor.setPosition(0, FLOOR);
 
+	if (!texture.loadFromFile("res/game_bg.jpg"))
+	{
+		std::cerr << "Failed lodaing background texture" << std::endl;
+	
+		system("pause");
+	}
+
+	background.setTexture(texture);
+	background.setColor(sf::Color::Red);
+
 	if (!font->loadFromFile("OXYGENE1.ttf"))
 	{
 		std::cout << "Error while loading font!";
 	}
 	text.setFont(*font);
+	text.setOutlineColor(sf::Color::Black);
 	text.setFillColor(sf::Color::White);
+	text.setOutlineThickness(4.f);
 	text.setCharacterSize(60);
 	text.setString("LEVEL COMPLATE");
+
+	leave.setFont(*font);
+	leave.setOutlineColor(sf::Color::Black);
+	leave.setFillColor(sf::Color::White);
+	leave.setOutlineThickness(2.f);
+	leave.setCharacterSize(30);
+	leave.setString("PRESS ESC TO LEAVE");
 
 	finish = Finish(35);
 
@@ -314,17 +333,12 @@ Level::~Level()
 		delete s;
 	}
 	spikes.clear();
-	//font.getInfo();
 }
 
 void Level::loadLevel()
 {
 	Fileloader file;
 	//TODO change to dynamic level selection based on index
-	if (levelName != "LEVEL2.json")
-	{
-		std::cout << "pizda";
-	}
 	json data = file.getJson("res/json/level/" + levelName);
 	auto BlockCoordinates = file.getBlockCoordinates(data);
 	auto rgb = file.getColor(data);
@@ -424,6 +438,7 @@ void Level::draw(sf::RenderWindow& window)
 	
 	
 	window.clear(sf::Color::Black);
+	window.draw(background);
 	for (auto it = blocks.begin(); it!= blocks.end();it++)
 	{
 		(*it)->draw(window);
@@ -432,25 +447,59 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		(*it)->draw(window);
 	}
-
-	if (!updateLevel)
-	{
-		window.draw(text);
-	}
 	window.draw(floor);
 	player.draw(window);
 	finish.draw(window);
-
+	if (!updateLevel && std::chrono::high_resolution_clock::now() > 
+		animation + std::chrono::milliseconds(2000))
+	{
+		window.draw(text);
+		window.draw(leave);
+		if (std::chrono::high_resolution_clock::now() >
+			animation + std::chrono::milliseconds(4000))
+		{
+			
+		}
+	}
+	
 }
 
 void Level::update()
 {
 
-
 	if (finished()) {
+		if (text.getPosition().y < 340)
+		{
+			textAnimation = 1;
+		}
+		if (text.getPosition().y > 380)
+		{
+			textAnimation = 2;
+		}
+
+		switch (textAnimation)
+		{
+		case 1:
+		{
+			text.move(0, 0.2);
+			leave.move(0, 0.2);
+			break;
+		}
+		case 2 :
+		{
+			text.move(0, -0.2);
+			leave.move(0, -0.2);
+			break;
+
+		}
+		default:
+			break;
+		}
 		return;
 	}
+	animation = std::chrono::high_resolution_clock::now();
 	text.setPosition(view.getCenter().x - text.getGlobalBounds().width / 2, 360);
+	leave.setPosition(view.getCenter().x - leave.getGlobalBounds().width / 2, 440);
 
 	//PLAYER EVENT QUEUEING
 	if (eventQueue)
@@ -509,8 +558,6 @@ void Level::update()
 			flag = true;
 		}
 
-		
-
 	}
 	for (auto it = spikes.begin(); it != spikes.end(); it++)
 	{
@@ -525,6 +572,14 @@ void Level::update()
 		player.gravity();
 	}
 	//GRAVITY
+
+	//BACKGROUND SWITCH
+	background.getPosition();
+	if (player.getBounds().left + GRID/2 > 640)
+	{
+		background.move(3, 0);
+
+	}
 
 }
 
