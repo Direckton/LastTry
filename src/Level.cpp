@@ -14,6 +14,7 @@ Player::Player()
 		sprite.getOrigin().y));
 	yAcceleration = 0.5f;
 	yVelocity = 0;
+
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -65,6 +66,7 @@ void Player::update()
 		return;
 	}
 	sprite.move(sf::Vector2f(4.f, 0.f));
+	
 
 	if (!onGround)
 	{
@@ -296,6 +298,20 @@ Level::Level(std::string name)
 
 	background.setTexture(texture);
 	background.setColor(sf::Color::Red);
+	background.setPosition(-100, 0);
+	background2 = background;
+	
+	if (!secondarytx.loadFromFile("res/game_bg_inverted.jpg"))
+	{
+		std::cerr << "Failed lodaing background texture" << std::endl;
+
+		system("pause");
+	}
+
+	secondaryBg.setTexture(secondarytx);
+	secondaryBg.setColor(sf::Color::Red);
+	secondaryBg.setPosition(-100, FLOOR);
+	secondaryBg2 = secondaryBg;
 
 	if (!font->loadFromFile("OXYGENE1.ttf"))
 	{
@@ -349,6 +365,11 @@ void Level::loadLevel()
 	t1.join();
 	t2.join();
 
+	background.setColor(c);
+	background2.setColor(c);
+	secondaryBg.setColor(c);
+	secondaryBg2.setColor(c);
+
 }
 
 void Level::loadBlocks(std::vector<std::pair<int,int>> coordinates, sf::Color c)
@@ -380,7 +401,11 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 
 void Level::draw(sf::RenderWindow& window)
 {
-	update();
+	if (!player.getAnimationEnded())
+	{
+		update();
+	}
+
 	if (updateLevel)
 	{
 		player.update();
@@ -439,6 +464,9 @@ void Level::draw(sf::RenderWindow& window)
 	
 	window.clear(sf::Color::Black);
 	window.draw(background);
+	window.draw(background2);
+	window.draw(secondaryBg);
+	window.draw(secondaryBg2);
 	for (auto it = blocks.begin(); it!= blocks.end();it++)
 	{
 		(*it)->draw(window);
@@ -462,6 +490,11 @@ void Level::draw(sf::RenderWindow& window)
 		}
 	}
 	
+}
+
+void Level::reset()
+{
+	levelReset = true;
 }
 
 void Level::update()
@@ -497,6 +530,51 @@ void Level::update()
 		}
 		return;
 	}
+
+	//UPDATE BACKGROUND
+
+	if (player.getBounds().left > background.getGlobalBounds().left + 
+		background.getGlobalBounds().width/2)
+	{
+		background2.setPosition(background.getGlobalBounds().left +
+			background.getGlobalBounds().width, 0);
+	}
+	if (player.getBounds().left > background2.getGlobalBounds().left + 
+		background2.getGlobalBounds().width/2)
+	{
+		background.setPosition(background2.getGlobalBounds().left +
+			background2.getGlobalBounds().width, 0);
+	}
+
+	if (player.getBounds().left > secondaryBg.getGlobalBounds().left +
+		secondaryBg.getGlobalBounds().width / 2)
+	{
+		secondaryBg2.setPosition(secondaryBg.getGlobalBounds().left +
+			secondaryBg.getGlobalBounds().width, FLOOR);
+	}
+	if (player.getBounds().left > secondaryBg2.getGlobalBounds().left +
+		secondaryBg2.getGlobalBounds().width / 2)
+	{
+		secondaryBg.setPosition(secondaryBg2.getGlobalBounds().left +
+			secondaryBg2.getGlobalBounds().width, FLOOR);
+	}
+	
+
+
+	if (levelReset)
+	{
+		background.setPosition(-100, 0);
+		background2.setPosition(background.getGlobalBounds().width, 0);
+		levelReset = false;
+	}
+	
+	if (player.getBounds().left + GRID / 2 > 640)
+	{
+		background.move(3, 0);
+		background2.move(3, 0);
+		
+	}
+
 	animation = std::chrono::high_resolution_clock::now();
 	text.setPosition(view.getCenter().x - text.getGlobalBounds().width / 2, 360);
 	leave.setPosition(view.getCenter().x - leave.getGlobalBounds().width / 2, 440);
@@ -537,11 +615,14 @@ void Level::update()
 				GRID + 20)
 			{
 				player.setOnGround((*it)->getBounds().top - GRID);
+				continue;
 			}
-			else
-			{
+			
+			
 				player.reset();
-			}
+				reset();
+				
+			
 				
 		}
 		
@@ -575,11 +656,7 @@ void Level::update()
 
 	//BACKGROUND SWITCH
 	background.getPosition();
-	if (player.getBounds().left + GRID/2 > 640)
-	{
-		background.move(3, 0);
-
-	}
+	
 
 }
 

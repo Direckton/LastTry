@@ -114,7 +114,11 @@ class Level : public Input
 	Finish finish;
 	sf::RectangleShape floor;
 	sf::Texture texture;
+	sf::Texture secondarytx;
 	sf::Sprite background;
+	sf::Sprite background2;
+	sf::Sprite secondaryBg;
+	sf::Sprite secondaryBg2;
 
 	sf::FloatRect lastPosition;
 
@@ -128,6 +132,8 @@ class Level : public Input
 
 	bool eventQueue = false;
 	bool updateLevel = true;
+	bool levelReset = false;
+
 
 	int textAnimation = 1;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);

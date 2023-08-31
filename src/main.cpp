@@ -51,7 +51,7 @@ int main()
 	while (window.isOpen())
 	{
         //Handle events
-        while (window.pollEvent(event))
+         while (window.pollEvent(event))
         {
             switch (event.type)
             {
