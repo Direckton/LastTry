@@ -99,6 +99,7 @@ public:
 	Finish(int _x);
 	~Finish() {};
 
+	float getFinishPosition();
 	void draw(sf::RenderWindow& window);
 	sf::FloatRect getBounds();
 
@@ -127,13 +128,15 @@ class Level : public Input
 	sf::Vector2f levelView{640,360};
 
 	sf::Font* font = new sf::Font;
-	sf::Text text, leave;
+	sf::Text text, leave, highscore;
 
 
 	bool eventQueue = false;
 	bool updateLevel = true;
 	bool levelReset = false;
 
+	int score = 0;
+	
 
 	int textAnimation = 1;
 	std::chrono::milliseconds elapsed = std::chrono::milliseconds(200);
@@ -156,5 +159,6 @@ public:
 	void update();
 	bool finished();
 	void reset();
+	void saveScore();
 };
 

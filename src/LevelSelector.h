@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
+#include "FileLoader.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -8,7 +9,7 @@ namespace fs = std::filesystem;
 class LevelInstance 
 {
 private:
-	sf::Text label, button, cursor;
+	sf::Text label, button, cursor, highscore;
 	sf::Font font;
 	int width, height;
 public:

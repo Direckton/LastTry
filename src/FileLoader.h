@@ -18,4 +18,10 @@ public:
 	std::vector<std::pair<int, int>> getBlockCoordinates(json& data);
 	std::vector<std::pair<int, int>> getSpikeCoordinates(json& data);
 	int * getColor(json& data);
+
+	int getHighscore(const json &data);
+
+	json setHighscore(json data, const int score);
+
+	void saveToFile(json& data, std::string path);
 };

@@ -28,12 +28,23 @@ LevelInstance::LevelInstance(int _width, int _height, int _offset, std::string n
 	cursor.setPosition(sf::Vector2f(button.getGlobalBounds().left, 
 		button.getPosition().y + button.getGlobalBounds().height/2));
 
+	Fileloader file;
+	int score = file.getHighscore(file.getJson("res/json/level/" + name + ".json"));
+
+	//TODO implement showing highscore in loading menu
+	highscore.setFont(font);
+	highscore.setCharacterSize(40);
+	highscore.setFillColor(sf::Color::White);
+	highscore.setString("HIGHSCORE: " + std::to_string(score) + "%");
+	highscore.setPosition(width / 2 - highscore.getGlobalBounds().width / 2 + _offset, 80);
+
 }
 
 void LevelInstance::draw(sf::RenderWindow &window)
 {
 	window.draw(label);
-	window.draw(button);
+	window.draw(highscore);
+	window.draw(button); 
 	window.draw(cursor);
 }
 

@@ -109,3 +109,40 @@ int * Fileloader::getColor(json& data)
 	}
 	return rgb;
 }
+
+int Fileloader::getHighscore(const json &data)
+{
+	int result=0;
+	try
+	{
+		result = data["highscore"];
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return result;
+}
+
+json Fileloader::setHighscore(json data, const int score)
+{
+	try
+	{
+		data["highscore"] = score;
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return data;
+}
+
+void Fileloader::saveToFile(json& data, std::string path)
+{
+	std::ofstream output(path);
+	if (output.is_open());
+	{
+		output << data;
+	}
+	output.close();
+}

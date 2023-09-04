@@ -276,10 +276,12 @@ sf::FloatRect Finish::getBounds()
 	return gradient.getBounds();
 }
 
+
 void Finish::draw(sf::RenderWindow &window)
 {
 	window.draw(gradient);
 }
+
 
 Level::Level(std::string name)
 {
@@ -331,8 +333,15 @@ Level::Level(std::string name)
 	leave.setCharacterSize(30);
 	leave.setString("PRESS ESC TO LEAVE");
 
-	finish = Finish(35);
+	highscore.setFont(*font);
+	highscore.setOutlineColor(sf::Color::Black);
+	highscore.setFillColor(sf::Color::White);
+	highscore.setOutlineThickness(2.f);
+	highscore.setCharacterSize(30);
+	highscore.setString("");
 
+	finish = Finish(36);
+	
 	loadLevel();
 
 }
@@ -405,19 +414,14 @@ void Level::draw(sf::RenderWindow& window)
 	{
 		update();
 	}
+	else
+	{
+		player.blowUp();
+	}
 
 	if (updateLevel)
 	{
 		player.update();
-
-	}
-	else
-	{
-		if (player.blowUp());
-		{
-		}
-
-		
 	}
 
 	view = window.getDefaultView();
@@ -478,6 +482,13 @@ void Level::draw(sf::RenderWindow& window)
 	window.draw(floor);
 	player.draw(window);
 	finish.draw(window);
+	if (player.getAnimationEnded())
+	{
+		highscore.setPosition(view.getCenter().x - highscore.getGlobalBounds().width/2,
+			view.getCenter().y - highscore.getGlobalBounds().height/2);
+		window.draw(highscore);
+	}
+
 	if (!updateLevel && std::chrono::high_resolution_clock::now() > 
 		animation + std::chrono::milliseconds(2000))
 	{
@@ -495,10 +506,25 @@ void Level::draw(sf::RenderWindow& window)
 void Level::reset()
 {
 	levelReset = true;
+	saveScore();
+}
+
+void Level::saveScore()
+{
+	Fileloader file;
+	int highscore = file.getHighscore(file.getJson("res/json/level/" + levelName));
+	if (score > highscore)
+	{
+		score = score > 100 ? 100 : score;
+		json newData = file.setHighscore(file.getJson("res/json/level/" + levelName),
+			score);
+		file.saveToFile(newData, "res/json/level/" + levelName);
+	}
 }
 
 void Level::update()
 {
+	score = player.getBounds().left / finish.getBounds().left * 100;
 
 	if (finished()) {
 		if (text.getPosition().y < 340)
@@ -618,12 +644,10 @@ void Level::update()
 				continue;
 			}
 			
-			
-				player.reset();
-				reset();
-				
-			
-				
+			player.reset();
+			reset();
+			std::string convertedScore = std::to_string(score);
+			highscore.setString("PROGRESS: " + convertedScore + "%");
 		}
 		
 
@@ -666,6 +690,7 @@ bool Level::finished()
 	if (player.getBounds().left > finish.getBounds().left - 4 * GRID)
 	{
 		updateLevel = false;
+		saveScore();
 		
 	}
 	if (!updateLevel)
