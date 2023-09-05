@@ -7,34 +7,6 @@ struct block
 
 Fileloader::Fileloader()
 {
-	json data;
-	std::ifstream fs("res/json/level/LEVEL1.json");
-	if (fs.is_open())
-	{
-		data = json::parse(fs);
-
-	}
-	std::string value;
-	try
-	{
-		//just iterate throug that and put it into vector or something
-		auto x = data["blocks"].get<json::array_t>();
-		std::cout << x[1].at("x");
-		std::cout << x[1].at("y");
-	}
-	catch (json::exception &e)
-	{
-		std::cout << e.what() << std::endl;
-
-	}
-
-	/*for (auto it = data["blocks"].begin(); it != data["blocks"].end(); it++)
-	{
-		std::cout << std::setw(2)<<  it.value();
-		json iData = it.value();
-		std::cout << iData["x"].get<int>();
-
-	}*/
 }
 
 json Fileloader::getJson( std::string name)
@@ -145,4 +117,46 @@ void Fileloader::saveToFile(json& data, std::string path)
 		output << data;
 	}
 	output.close();
+}
+
+int Fileloader::getFinish(json& data)
+{
+	int finish = 0;
+	try
+	{
+		finish = data["finish"];
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return finish;
+}
+
+float Fileloader::getVolume(json& data, std::string var)
+{
+	float volume = 50;
+	try
+	{
+		volume = data[var];
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return volume;
+}
+
+std::string Fileloader::getMusicTitle(json& data)
+{
+	std::string title = "";
+	try
+	{
+		title = data["music"];
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return title;
 }

@@ -5,6 +5,8 @@
 #include "Exit.h"
 #include "LevelSelector.h"
 #include "Level.h"
+#include "Music.h"
+#include "FileLoader.h"
 #include <iostream>
 
 class InterfaceController : public Menu, public Settings, public Input, public Selector, public Level
@@ -15,6 +17,10 @@ class InterfaceController : public Menu, public Settings, public Input, public S
 	Exit* exit = nullptr;
 	Selector* selector = nullptr;
 	Level* level = nullptr;
+
+	SoundControler soundController;
+
+	Fileloader file;
 
 	int width, height; //h&w of the screen
 
@@ -34,6 +40,7 @@ public:
 		height = _height;
 		interface = 0;
 
+		soundController.playMenuMusic();
 
 		switch (interface)
 		{
@@ -291,6 +298,7 @@ public:
 		if (level == nullptr)
 		{
 			level = new Level((*selector).getLevelName()); //add level number through selector.getLevelIndex
+			soundController.stopMenuMusic();
 		}
 		interface = 4;
 	}
@@ -383,6 +391,7 @@ public:
 		{
 			delete level;
 			level = nullptr;
+			soundController.playMenuMusic();
 		}
 		
 		if (menu == nullptr)

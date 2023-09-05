@@ -26,18 +26,12 @@ int main()
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "GeometryDash",sf::Style::Default,CSettings);
     View view;
     Event event;
-    InterfaceController controller(WIDTH,HEIGHT);
-    SoundControler music;
-
-    
+    InterfaceController controller(WIDTH,HEIGHT);    
 
     view.reset(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 
-
     view.getCenter();
     window.setView(view);
-
-    music.playMusic("res/sounds/Sweden.wav");
 
     window.getSettings().antialiasingLevel;
     window.setFramerateLimit(120);
@@ -99,13 +93,8 @@ int main()
         if (mouseTrack)
         {
             controller.mouseInput(event, window);
-
-            music.setMusicVolume(controller.updateVolume());
-
         }
         
-
-
         //Render
         controller.render(window);
         //window.draw(sp);

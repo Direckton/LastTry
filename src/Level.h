@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "InputHandler.h"
 #include "FileLoader.h"
+#include "Music.h"
 #include <math.h>
 #include <chrono>
 #include <thread>
@@ -129,6 +130,8 @@ class Level : public Input
 
 	sf::Font* font = new sf::Font;
 	sf::Text text, leave, highscore;
+
+	SoundControler *sound = new SoundControler;
 
 
 	bool eventQueue = false;

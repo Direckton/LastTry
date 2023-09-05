@@ -339,11 +339,11 @@ Level::Level(std::string name)
 	highscore.setOutlineThickness(2.f);
 	highscore.setCharacterSize(30);
 	highscore.setString("");
-
-	finish = Finish(36);
 	
 	loadLevel();
 
+	sound->initSfx("res/sounds/Bonk.wav");
+	
 }
 
 Level::~Level()
@@ -358,6 +358,7 @@ Level::~Level()
 		delete s;
 	}
 	spikes.clear();
+	sound->stopMusic();
 }
 
 void Level::loadLevel()
@@ -369,6 +370,8 @@ void Level::loadLevel()
 	auto rgb = file.getColor(data);
 	sf::Color c(rgb[0],rgb[1],rgb[2]);
 	auto SpikeCoordinates = file.getSpikeCoordinates(data);
+	finish = Finish(file.getFinish(data));
+	sound->playMusic("res/sounds/" + file.getMusicTitle(data) + ".wav");
 	std::thread t1(&Level::loadBlocks,this, BlockCoordinates, c);
 	std::thread t2(&Level::loadSpikes,this, SpikeCoordinates, c);
 	t1.join();
@@ -507,6 +510,8 @@ void Level::reset()
 {
 	levelReset = true;
 	saveScore();
+	sound->stopMusic();
+	sound->playSfx();
 }
 
 void Level::saveScore()
@@ -592,6 +597,7 @@ void Level::update()
 		background.setPosition(-100, 0);
 		background2.setPosition(background.getGlobalBounds().width, 0);
 		levelReset = false;
+		sound->replayMusic();
 	}
 	
 	if (player.getBounds().left + GRID / 2 > 640)
