@@ -3,6 +3,10 @@
 #include <iostream>
 #include "FileLoader.h"
 
+enum Selectors {
+	musicSel, sfxSel
+};
+
 class SoundControler
 {
 	sf::Music menuMusic;
@@ -16,7 +20,7 @@ public:
 	void stopMenuMusic();
 	void playMusic(std::string path);
 	void stopMusic();
-	void setMusicVolume(float volume);
+	void setVolume(float volume, Selectors selector);
 	float getMusicVolume();
 	void replayMusic();
 	void initSfx(std::string path);

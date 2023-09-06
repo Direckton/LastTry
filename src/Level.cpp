@@ -174,8 +174,8 @@ void Player::finishAnimation()
 
 Block::Block(int _x, int _y, const sf::Color& color)
 {
-	x = _x * GRID;
-	y = _y * GRID;
+	x = _x;
+	y = _y;
 
 
 	block = sf::VertexArray(sf::Quads, 4);
@@ -371,22 +371,36 @@ void Level::loadLevel()
 	sf::Color c(rgb[0],rgb[1],rgb[2]);
 	auto SpikeCoordinates = file.getSpikeCoordinates(data);
 	finish = Finish(file.getFinish(data));
-	sound->playMusic("res/sounds/" + file.getMusicTitle(data) + ".wav");
-	std::thread t1(&Level::loadBlocks,this, BlockCoordinates, c);
-	std::thread t2(&Level::loadSpikes,this, SpikeCoordinates, c);
-	t1.join();
-	t2.join();
+
+	std::vector<std::jthread> pool;
+	pool.emplace_back(&Level::loadBlocks,this, BlockCoordinates, c);
+	//std::thread t1(&Level::loadBlocks,this, BlockCoordinates, c);
+	pool.emplace_back(&Level::loadSpikes,this, SpikeCoordinates, c);
+	
+	for (auto& p : pool)
+	{
+		p.join();
+	}
+	
 
 	background.setColor(c);
 	background2.setColor(c);
 	secondaryBg.setColor(c);
 	secondaryBg2.setColor(c);
 
+	sound->playMusic("res/sounds/" + file.getMusicTitle(data) + ".wav");
 }
+
 
 void Level::loadBlocks(std::vector<std::pair<int,int>> coordinates, sf::Color c)
 {
 	auto start = std::chrono::high_resolution_clock::now();
+
+	std::ranges::for_each(coordinates, [](std::pair<int, int>& p) {
+		p.first *= GRID;
+		p.second *= GRID;
+		});
+
 	for (int i = 0; i < coordinates.size(); i++)
 	{
 		blocks.push_back(new Block(coordinates[i].first, coordinates[i].second,
@@ -527,6 +541,70 @@ void Level::saveScore()
 	}
 }
 
+void Level::blockColision()
+{
+	std::vector<Block*> vec;
+	
+	for (auto it = blocks.begin(); it != blocks.end(); it++)
+	{
+		if ((*it)->getBounds().left < view.getCenter().x + 100 &&
+			(*it)->getBounds().left > view.getCenter().x - 600)
+		{
+			vec.push_back(*it);
+		}
+	}
+
+	for (auto it = vec.begin(); it != vec.end(); it++)
+	{
+		if (player.getBounds().intersects((*it)->getBounds()))
+		{
+			//i dont like how it's made but i have no ide how to change it
+			//without changing all the objects
+			if (!player.getOnGround() &&
+				(*it)->getBounds().top > player.getBounds().top &&
+				player.getBounds().top < (*it)->getBounds().top -
+				GRID + 20)
+			{
+				player.setOnGround((*it)->getBounds().top - GRID);
+				continue;
+			}
+
+			player.reset();
+			reset();
+			std::string convertedScore = std::to_string(score);
+			highscore.setString("PROGRESS: " + convertedScore + "%");
+		}
+
+
+		sf::FloatRect playerBounds = player.getBounds();
+		playerBounds.top = player.getBounds().top + 1;
+		if ((*it)->getBounds().intersects(playerBounds))
+		{
+			flag = false;
+
+		}
+		else
+		{
+			flag = true;
+		}
+
+	}
+}
+
+void Level::spikeColision()
+{
+	for (auto it = spikes.begin(); it != spikes.end(); it++)
+	{
+		if (player.getBounds().intersects((*it)->getBounds()))
+		{
+			player.reset();
+			reset();
+			std::string convertedScore = std::to_string(score);
+			highscore.setString("PROGRESS: " + convertedScore + "%");
+		}
+	}
+}
+
 void Level::update()
 {
 	score = player.getBounds().left / finish.getBounds().left * 100;
@@ -632,51 +710,12 @@ void Level::update()
 	
 	
 	//COLISSION DETECTION
-	bool flag = false, prime = false; 
 	
 
-	for (auto it = blocks.begin(); it != blocks.end(); it++)
-	{
-		if (player.getBounds().intersects((*it)->getBounds()))
-		{
-			//i dont like how it's made but i have no ide how to change it
-			//without changing all the objects
-			if (!player.getOnGround() &&
-				(*it)->getBounds().top > player.getBounds().top &&
-				player.getBounds().top < (*it)->getBounds().top -
-				GRID + 20)
-			{
-				player.setOnGround((*it)->getBounds().top - GRID);
-				continue;
-			}
-			
-			player.reset();
-			reset();
-			std::string convertedScore = std::to_string(score);
-			highscore.setString("PROGRESS: " + convertedScore + "%");
-		}
-		
+	blockColision();
 
-		sf::FloatRect playerBounds = player.getBounds();
-		playerBounds.top = player.getBounds().top + 1;
-		if ((*it)->getBounds().intersects(playerBounds))
-		{
-			flag = false;
-
-		} 
-		else
-		{
-			flag = true;
-		}
-
-	}
-	for (auto it = spikes.begin(); it != spikes.end(); it++)
-	{
-		if (player.getBounds().intersects((*it)->getBounds()))
-		{
-			player.reset();
-		}
-	}
+	spikeColision();
+	
 
 	if (flag)
 	{

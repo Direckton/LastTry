@@ -65,9 +65,24 @@ void SoundControler::stopMenuMusic()
 	}
 }
 
-void SoundControler::setMusicVolume(float volume)
+void SoundControler::setVolume(float volume, Selectors selector)
 {
-	music.setVolume(volume);
+	switch (selector)
+	{
+	case musicSel:
+	{
+		music.setVolume(volume);
+		menuMusic.setVolume(volume);
+		break;
+	}
+	case sfxSel:
+	{
+		sfx.setVolume(volume);
+		break;
+	}
+	default: 
+		break;
+	}
 }
 
 float SoundControler::getMusicVolume()

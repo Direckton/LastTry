@@ -147,6 +147,19 @@ float Fileloader::getVolume(json& data, std::string var)
 	return volume;
 }
 
+void Fileloader::setVolume(json& data, std::string var, int volume)
+{
+	try
+	{
+		data[var] = volume;
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+}
+
 std::string Fileloader::getMusicTitle(json& data)
 {
 	std::string title = "";

@@ -29,8 +29,6 @@ class InterfaceController : public Menu, public Settings, public Input, public S
 
 	bool mute = false;
 
-
-
 	bool close = false;
 
 public:
@@ -39,6 +37,8 @@ public:
 		width = _width;
 		height = _height;
 		interface = 0;
+
+		setVolume();
 
 		soundController.playMenuMusic();
 
@@ -66,6 +66,17 @@ public:
 		}
 		}
 	}
+
+	void setVolume()
+	{
+		Fileloader file;
+		auto data = file.getJson("res/json/settings.json");
+		volume = file.getVolume(data, "music");
+		sfxVolume = file.getVolume(data, "sfx");
+		soundController.setVolume(volume, musicSel);
+		soundController.setVolume(sfxVolume, sfxSel);
+	}
+
 	~InterfaceController()
 	{
 		delete menu;
@@ -107,11 +118,16 @@ public:
 			{
 				volume = 0;
 				sfxVolume = 0;
+				soundController.setVolume(volume, musicSel);
+				soundController.setVolume(sfxVolume, sfxSel);
+
 			}
 			else
 			{
 				volume = settings->getSliderVolume(0);
 				sfxVolume = settings->getSliderVolume(1);
+				soundController.setVolume(volume, musicSel);
+				soundController.setVolume(sfxVolume, sfxSel);
 
 			}
 			//mute
@@ -152,11 +168,14 @@ public:
 			{
 				resetVolume();
 				volume = settings->volSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
+				soundController.setVolume(volume, musicSel);
 			}
 			if ((settings->sfxSlider.activateSlider(window) || settings->sfxSlider.getSliderStatus()) && !settings->volSlider.getSliderStatus())
 			{
 				resetVolume();
 				settings->sfxSlider.changeCirclePosition(sf::Mouse::getPosition(window).x, event.mouseMove.y, window);
+				soundController.setVolume(volume, sfxSel);
+
 			}
 
 			
@@ -254,6 +273,7 @@ public:
 			break;
 		}
 		}
+		
 	}
 	void menuSelection()
 	{
@@ -274,6 +294,7 @@ public:
 			if (settings == nullptr)
 			{
 				settings = new Settings(width, height);
+				settings->setCirclePosition(volume);
 			}
 			interface = 1;
 			break;
@@ -374,6 +395,12 @@ public:
 	{
 		if (settings != nullptr)
 		{
+			//save current status of volumes to file
+			Fileloader file;
+			auto data = file.getJson("res/json/settings.json");
+			file.setVolume(data, "music", volume);
+			file.setVolume(data, "sfx", sfxVolume);
+			file.saveToFile(data, "res/json/settings.json");
 			delete settings;
 			settings = nullptr;
 		}

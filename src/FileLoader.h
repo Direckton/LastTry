@@ -28,6 +28,7 @@ public:
 	void saveToFile(json& data, std::string path);
 
 	float getVolume(json& data, std::string var);
+	void setVolume(json& data, std::string var, int volume);
 
 	std::string getMusicTitle(json& data);
 

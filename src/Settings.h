@@ -18,7 +18,7 @@ protected:
 	std::string name;
 
 
-	bool check = true;
+	bool check = false;
 public:
 	Checkbox() {};
 	Checkbox(std::string title);
@@ -68,6 +68,9 @@ public:
 	bool getSliderStatus();
 	void deactivateSlider();
 
+	void setCirclePosition(int volume);
+
+
 };
 
 
@@ -111,6 +114,7 @@ public:
 	void setCheckboxStatus(int i, bool state);
 	sf::Vector2f getCirclePosition();
 	void updateInterface();
+
 	
 	/**
 	* calculates volume out of slider position from 0 to 100

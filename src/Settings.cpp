@@ -20,8 +20,8 @@ Settings::Settings(int _width, int _hight)
 	checkbox.push_back(replay);
 	checkbox.push_back(progressBar);
 	
-	sfxSlider = Slider(width, _hight, 300);
-	volSlider = Slider(width, _hight, 200);
+	sfxSlider = Slider(_width, _hight, 300);
+	volSlider = Slider(_width, _hight, 200);
 
 	if (!font.loadFromFile("OXYGENE1.ttf"))
 	{
@@ -269,6 +269,22 @@ int Slider::changeCirclePosition(int x, int y, sf::RenderWindow& window)
 	}
 
 	return volume;
+}
+
+void Slider::setCirclePosition(int volume)
+{
+	int zero = SLIDER_BOUNDS;
+	int full = 1280 - SLIDER_BOUNDS;
+	//int volume = (circle.getPosition().x - zero) / (bar.getSize().x - 5) * 100;
+	float xCoordinates =full * (volume / 100.f);
+
+
+	if (xCoordinates > SLIDER_BOUNDS && xCoordinates < full)
+	{
+		circle.setPosition(xCoordinates, circle.getPosition().y);
+		progress.setSize(sf::Vector2f(circle.getPosition().x - SLIDER_BOUNDS, 10));
+	}
+
 }
 
 void Slider::draw(sf::RenderWindow &window)

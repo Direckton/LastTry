@@ -6,6 +6,10 @@
 #include <math.h>
 #include <chrono>
 #include <thread>
+#include <atomic>
+#include <vector>
+#include <ranges>
+
 
 #define GRID 60
 #define FLOOR 600
@@ -138,6 +142,8 @@ class Level : public Input
 	bool updateLevel = true;
 	bool levelReset = false;
 
+	bool flag = false, prime = false;
+
 	int score = 0;
 	
 
@@ -163,5 +169,7 @@ public:
 	bool finished();
 	void reset();
 	void saveScore();
+	void blockColision();
+	void spikeColision();
 };
 
