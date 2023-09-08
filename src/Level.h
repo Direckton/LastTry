@@ -9,6 +9,7 @@
 #include <atomic>
 #include <vector>
 #include <ranges>
+#include <barrier>
 
 
 #define GRID 60
@@ -171,5 +172,7 @@ public:
 	void saveScore();
 	void blockColision();
 	void spikeColision();
+	void drawBlocks(sf::RenderWindow& window);
+	void drawSpikes(sf::RenderWindow& window);
 };
 

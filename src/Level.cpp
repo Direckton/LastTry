@@ -425,6 +425,26 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 
 }
 
+std::barrier bar(2);
+
+
+void Level::drawBlocks(sf::RenderWindow &window )
+{
+	for (auto it = blocks.begin(); it != blocks.end(); it++)
+	{
+		(*it)->draw(window);
+	}
+	bar.arrive();
+}
+void Level::drawSpikes(sf::RenderWindow& window)
+{
+	for (auto it = spikes.begin(); it != spikes.end(); it++)
+	{
+		(*it)->draw(window);
+	}
+	bar.arrive();
+}
+
 void Level::draw(sf::RenderWindow& window)
 {
 	if (!player.getAnimationEnded())
@@ -488,14 +508,9 @@ void Level::draw(sf::RenderWindow& window)
 	window.draw(background2);
 	window.draw(secondaryBg);
 	window.draw(secondaryBg2);
-	for (auto it = blocks.begin(); it!= blocks.end();it++)
-	{
-		(*it)->draw(window);
-	}
-	for (auto it = spikes.begin(); it != spikes.end(); it++)
-	{
-		(*it)->draw(window);
-	}
+	drawBlocks(window);
+	drawSpikes(window);
+
 	window.draw(floor);
 	player.draw(window);
 	finish.draw(window);
