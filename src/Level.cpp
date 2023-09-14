@@ -374,7 +374,6 @@ void Level::loadLevel()
 
 	std::vector<std::jthread> pool;
 	pool.emplace_back(&Level::loadBlocks,this, BlockCoordinates, c);
-	//std::thread t1(&Level::loadBlocks,this, BlockCoordinates, c);
 	pool.emplace_back(&Level::loadSpikes,this, SpikeCoordinates, c);
 	
 	for (auto& p : pool)

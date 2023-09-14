@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Input" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAgAACAAIAAAAAAEAAAAABAAAAACEAAAAA=</HashCode>
+      <FileName>src\InputHandler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InterfaceController" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAgAAOBABGIAAQAYCAAAEoAwAmAAJBARIAAgCASIAA=</HashCode>
+      <FileName>src\InterfaceController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Exit" Collapsed="true">
+    <Position X="11.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAACAQAAABAEAAAIAAAAAAAACAAAAIAAACGAAAAA=</HashCode>
+      <FileName>src\Exit.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fileloader" Collapsed="true">
+    <Position X="18" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AICAIAAAAAAAAAAAAAAQAEIgAAAAAAAAIAgAgEAAIAA=</HashCode>
+      <FileName>src\FileLoader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="18" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACaAgEQAAABAIAgCIACAAAABCAAgBACCBggQIEgBA=</HashCode>
+      <FileName>src\Level.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Block" Collapsed="true">
+    <Position X="16.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAECAAAAAAAAAAAAAIAAAAAAAAAAAAAAIRgAAAABAE=</HashCode>
+      <FileName>src\Level.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spike" Collapsed="true">
+    <Position X="16.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAACAAgAAAAAAAAAAIAAQAAAAAQAAAAAABggAAAAAA=</HashCode>
+      <FileName>src\Level.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Level" Collapsed="true">
+    <Position X="13.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AUKAgAAHIAEgKAAgAYYIAYAEAgCEAgCJAUACCABFJAg=</HashCode>
+      <FileName>src\Level.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Finish" Collapsed="true">
+    <Position X="19.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACECAAAAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAAg=</HashCode>
+      <FileName>src\Level.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LevelInstance" Collapsed="true">
+    <Position X="16.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAABAIAAAABUIQAICAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\LevelSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Selector" Collapsed="true">
+    <Position X="4.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AJAAAAgAAAAQAAQAQAIAAAAAAAEAAABACQAASEAAACA=</HashCode>
+      <FileName>src\LevelSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Menu" Collapsed="true">
+    <Position X="9.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAACBQAAAABUAQAIAAAAAAAAKAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>src\Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Checkbox" Collapsed="true">
+    <Position X="5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAGAAAQAAIAAAAAQIAAgACBAAEBGAAAAAAAAQAAAA=</HashCode>
+      <FileName>src\Settings.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Slider" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAACAAEEAAAAAQAQAIACAAAABAAAAAEAIJjAAAABAA=</HashCode>
+      <FileName>src\Settings.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Settings" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIACAAUWAAIAAAAQAYICAAAAJghYAIEgIIAAMECAAA=</HashCode>
+      <FileName>src\Settings.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundControler" Collapsed="true">
+    <Position X="19.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAIAgBQEAAAQEAAAEAAAAEAAAAAoBAgAQAAAA=</HashCode>
+      <FileName>src\Music.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="block" Collapsed="true">
+    <Position X="16.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>src\FileLoader.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Selectors" Collapsed="true">
+    <Position X="16.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Music.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
