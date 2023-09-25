@@ -63,10 +63,14 @@ Selector::Selector(int _width, int _height)
 	for (auto const& dir_entry : std::filesystem::directory_iterator{ levelPath })
 	{
 		std::string name = dir_entry.path().stem().string();
-		levelNames.push_back(dir_entry.path().filename().string());
-		level = new LevelInstance(width, _height, i*width ,name);
-		levels.push_back(level);
-		i++;
+		std::regex pattern("^[A-Z0-9]+$");
+		if (std::regex_match(name, pattern))
+		{
+			levelNames.push_back(dir_entry.path().filename().string());
+			level = new LevelInstance(width, _height, i*width ,name);
+			levels.push_back(level);
+			i++;
+		}
 	}
 
 

@@ -3,6 +3,7 @@
 #include "InputHandler.h"
 #include "FileLoader.h"
 #include <filesystem>
+#include <regex>
 
 namespace fs = std::filesystem;
 
@@ -13,7 +14,7 @@ private:
 	sf::Font font;
 	int width, height;
 public:
-	LevelInstance(){}
+	LevelInstance() {}
 	LevelInstance(int _width, int _height, int _offset, std::string name);
 	~LevelInstance(){}
 
