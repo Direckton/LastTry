@@ -38,6 +38,21 @@ void Player::jump()
 	}
 }
 
+void Player::boost()
+{
+	if (onGround == true)
+	{
+		onGround = false;
+		yVelocity = -18;
+	}
+	if (onBlock == true)
+	{
+		onBlock = false;
+		yVelocity = -18;
+	}
+}
+
+
 void Player::setOnGround(int y)
 {
 	if (y == FLOOR)
@@ -283,6 +298,33 @@ void Finish::draw(sf::RenderWindow &window)
 }
 
 
+Booster::Booster(int _x, int _y)
+{
+	x = _x * 60;
+	y = _y * 60;
+
+	texture.loadFromFile("res/YellowPad.png");
+	
+	sprite.setTexture(texture);
+	sprite.setScale(0.63,0.63);
+	sprite.setPosition(x, FLOOR - y - sprite.getGlobalBounds().height);
+
+}
+
+void Booster::draw(sf::RenderWindow& window)
+{
+	window.draw(sprite);
+}
+
+Booster::~Booster()
+{
+}
+
+sf::FloatRect Booster::getBounds()
+{
+	return sprite.getGlobalBounds();
+}
+
 Level::Level(std::string name)
 {
 	levelName = name;
@@ -344,6 +386,8 @@ Level::Level(std::string name)
 
 	sound->initSfx("res/sounds/Bonk.wav");
 	
+
+	boosters.push_back(std::unique_ptr<Booster>(new Booster(7, 0)));
 }
 
 Level::~Level()
@@ -510,6 +554,15 @@ void Level::draw(sf::RenderWindow& window)
 	window.draw(secondaryBg2);
 	drawBlocks(window);
 	drawSpikes(window);
+
+	for (auto& b : boosters)
+	{
+		b->draw(window);
+	}
+	for (auto &p : particles)
+	{
+		p.draw(window);
+	}
 
 	window.draw(floor);
 	player.draw(window);
@@ -730,6 +783,14 @@ void Level::update()
 	blockColision();
 
 	spikeColision();
+
+	for (auto& b : boosters)
+	{
+		if (b->getBounds().intersects(player.getBounds()))
+		{
+			player.boost();
+		}
+	}
 	
 
 	if (flag)
@@ -780,4 +841,29 @@ void Level::space()
 	eventQueue = true;
 	player.jump();
 	
+}
+
+Particle::Particle(int size, int lifespan, float _velocity, sf::Vector2f _direction)
+{
+	particle.setFillColor(sf::Color::White);
+	particle.setSize(sf::Vector2f(size, size));
+	velocity = _velocity;
+	direction = _direction * velocity;
+
+}
+
+Particle::~Particle()
+{
+
+}
+
+void Particle::update()
+{
+	particle.move(direction);
+}
+
+void Particle::draw(sf::RenderWindow& window)
+{
+	update();
+	window.draw(particle);
 }

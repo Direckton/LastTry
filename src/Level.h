@@ -44,6 +44,7 @@ public:
 
 	void draw(sf::RenderWindow& window);
 	void jump();
+	void boost();
 	void update();
 	sf::FloatRect getBounds();
 	void reset();
@@ -108,6 +109,41 @@ public:
 	float getFinishPosition();
 	void draw(sf::RenderWindow& window);
 	sf::FloatRect getBounds();
+};
+
+class Particle
+{
+private:
+	int x, y;
+	float velocity;
+	sf::Vector2f direction;
+	sf::RectangleShape particle;
+public:
+	Particle() {};
+	Particle(int size, int lifespan, float velocity, sf::Vector2f direction);
+	~Particle();
+
+	void update();
+	void draw(sf::RenderWindow &window);
+};
+
+class Booster
+{
+	int x, y;
+	sf::Sprite sprite;
+	sf::Texture texture;
+
+	std::vector<Particle> particles;
+
+
+public:
+	Booster() {};
+	Booster(int _x, int _y);
+	~Booster();
+
+	void draw(sf::RenderWindow& window);
+	sf::FloatRect getBounds();
+
 
 };
 
@@ -117,8 +153,12 @@ class Level : public Input
 	std::vector<Block *> blocks;
 	std::vector<Spike *> spikes;
 
+	std::vector<Particle> particles;
+
 	Player player;
 	Finish finish;
+
+	std::vector<std::unique_ptr<Booster>> boosters;
 	sf::RectangleShape floor;
 	sf::Texture texture;
 	sf::Texture secondarytx;

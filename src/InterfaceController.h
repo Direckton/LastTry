@@ -432,6 +432,9 @@ public:
 
 	void back()
 	{
+		//NO NEED TO DELETE CURRENT INTERFACE 
+		//this is being handled later
+		//totaly didnt look for it for a week
 		switch (interface)
 		{
 		case 0:
@@ -457,7 +460,6 @@ public:
 		}
 		case 4:
 		{
-			level->~Level();
 			goBackToMenu();
 			break;
 		}
