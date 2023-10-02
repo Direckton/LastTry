@@ -63,6 +63,27 @@ std::vector<std::pair<int, int>> Fileloader::getSpikeCoordinates(json& data)
 	return output;
 }
 
+std::vector<std::pair<int, int>> Fileloader::specialElementCoordinates(json& data, std::string key)
+{
+	std::vector<std::pair<int, int>> output;
+	try
+	{
+		//just iterate throug that and put it into vector or something
+		auto coordinates = data[key].get<json::array_t>();
+		for (int i = 0; i < coordinates.size(); i++)
+		{
+			int x = coordinates[i].at("x");
+			int y = coordinates[i].at("y");
+			output.push_back(std::pair<int, int>(x, y));
+		}
+	}
+	catch (json::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	return output;
+}
+
 int * Fileloader::getColor(json& data)
 {
 	int rgb[3];

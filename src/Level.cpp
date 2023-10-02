@@ -52,6 +52,11 @@ void Player::boost()
 	}
 }
 
+void Player::doubleJump()
+{
+	onBlock = true;
+}
+
 
 void Player::setOnGround(int y)
 {
@@ -325,6 +330,33 @@ sf::FloatRect Booster::getBounds()
 	return sprite.getGlobalBounds();
 }
 
+Double::Double(int _x, int _y)
+{
+	x = _x * 60;
+	y = _y * 60;
+
+	texture.loadFromFile("res/YellowRing.png");
+
+	sprite.setTexture(texture);
+	sprite.setScale(0.3, 0.3);
+	sprite.setPosition(x + GRID/2 - sprite.getGlobalBounds().width / 2,
+		FLOOR - y - GRID/2 + sprite.getGlobalBounds().height/2);
+}
+
+Double::~Double()
+{
+}
+
+void Double::draw(sf::RenderWindow& window)
+{
+	window.draw(sprite);
+}
+
+sf::FloatRect Double::getBounds()
+{
+	return sprite.getGlobalBounds();
+}
+
 Level::Level(std::string name)
 {
 	levelName = name;
@@ -385,9 +417,7 @@ Level::Level(std::string name)
 	loadLevel();
 
 	sound->initSfx("res/sounds/Bonk.wav");
-	
 
-	boosters.push_back(std::unique_ptr<Booster>(new Booster(7, 0)));
 }
 
 Level::~Level()
@@ -414,11 +444,15 @@ void Level::loadLevel()
 	auto rgb = file.getColor(data);
 	sf::Color c(rgb[0],rgb[1],rgb[2]);
 	auto SpikeCoordinates = file.getSpikeCoordinates(data);
+	auto BoosterCoordinates = file.specialElementCoordinates(data,"booster");
+	auto DoubleCoordinates = file.specialElementCoordinates(data,"double");
 	finish = Finish(file.getFinish(data));
 
 	std::vector<std::jthread> pool;
 	pool.emplace_back(&Level::loadBlocks,this, BlockCoordinates, c);
 	pool.emplace_back(&Level::loadSpikes,this, SpikeCoordinates, c);
+	pool.emplace_back(&Level::loadBoosters,this, BoosterCoordinates);
+	pool.emplace_back(&Level::loadDoubles,this, DoubleCoordinates);
 	
 	for (auto& p : pool)
 	{
@@ -465,6 +499,33 @@ void Level::loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	std::cout << "Spikes done in: " << duration.count() << " ms" << std::endl;
+
+}
+void Level::loadBoosters(std::vector<std::pair<int, int>> coordinates)
+{
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < coordinates.size(); i++)
+	{
+		boosters.push_back(std::unique_ptr<Booster>(
+			new Booster(coordinates[i].first, coordinates[i].second)));
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	std::cout << "Boosters done in: " << duration.count() << " ms" << std::endl;
+
+}
+
+void Level::loadDoubles(std::vector<std::pair<int, int>> coordinates)
+{
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < coordinates.size(); i++)
+	{
+		doubles.push_back(std::unique_ptr<Double>(
+			new Double(coordinates[i].first, coordinates[i].second)));
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	std::cout << "Doubles done in: " << duration.count() << " ms" << std::endl;
 
 }
 
@@ -557,6 +618,10 @@ void Level::draw(sf::RenderWindow& window)
 	for (auto& b : boosters)
 	{
 		b->draw(window);
+	}
+	for (auto& d : doubles)
+	{
+		d->draw(window);
 	}
 	for (auto &p : particles)
 	{
@@ -790,6 +855,15 @@ void Level::update()
 			player.boost();
 		}
 	}
+
+	for (auto& d : doubles)
+	{
+		if (d->getBounds().intersects(player.getBounds()))
+		{
+			player.doubleJump();
+		}
+	}
+
 	
 
 	if (flag)

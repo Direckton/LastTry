@@ -17,6 +17,7 @@ public:
 	json getJson(std::string name);
 	std::vector<std::pair<int, int>> getBlockCoordinates(json& data);
 	std::vector<std::pair<int, int>> getSpikeCoordinates(json& data);
+	std::vector<std::pair<int, int>> specialElementCoordinates(json& data, std::string key);
 	int * getColor(json& data);
 	int getFinish(json& data);
 

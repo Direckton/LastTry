@@ -45,6 +45,7 @@ public:
 	void draw(sf::RenderWindow& window);
 	void jump();
 	void boost();
+	void doubleJump();
 	void update();
 	sf::FloatRect getBounds();
 	void reset();
@@ -147,6 +148,26 @@ public:
 
 };
 
+class Double
+{
+	int x, y;
+	sf::Sprite sprite;
+	sf::Texture texture;
+
+	std::vector<Particle> particles;
+
+
+public:
+	Double() {};
+	Double(int _x, int _y);
+	~Double();
+
+	void draw(sf::RenderWindow& window);
+	sf::FloatRect getBounds();
+
+
+};
+
 class Level : public Input
 {
 	std::string levelName;
@@ -159,6 +180,7 @@ class Level : public Input
 	Finish finish;
 
 	std::vector<std::unique_ptr<Booster>> boosters;
+	std::vector<std::unique_ptr<Double>> doubles;
 	sf::RectangleShape floor;
 	sf::Texture texture;
 	sf::Texture secondarytx;
@@ -204,6 +226,8 @@ public:
 	void loadLevel();
 	void loadBlocks(std::vector<std::pair<int, int>> coordinates, sf::Color c);
 	void loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c);
+	void loadBoosters(std::vector<std::pair<int, int>> coordinates);
+	void loadDoubles(std::vector<std::pair<int, int>> coordinates);
 	void draw(sf::RenderWindow& window);
 	void space();
 	void update();
