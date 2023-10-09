@@ -418,7 +418,7 @@ public:
 		{
 			delete level;
 			level = nullptr;
-			soundController.playMenuMusic();
+			//soundController.playMenuMusic();
 		}
 		
 		if (menu == nullptr)

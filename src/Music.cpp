@@ -21,13 +21,13 @@ void SoundControler::playMenuMusic()
 	{
 		music.stop();
 	}
-	if (menuMusic.getDuration() == sf::Time(sf::milliseconds(0)))
-	{
-		if (!menuMusic.openFromFile("res/sounds/Sweden.wav"))
-		{
-			std::cerr << "didnt load music" << std::endl;
-		}
-	}
+	//if (menuMusic.getDuration() == sf::Time(sf::milliseconds(0)))
+	//{
+	//	if (!menuMusic.openFromFile("res/sounds/Sweden.wav"))
+	//	{
+	//		std::cerr << "didnt load music" << std::endl;
+	//	}
+	//}
 	menuMusic.play();
 }
 
