@@ -80,7 +80,7 @@ public:
 
 };
 
-
+/**Settings menu main Interface class, inherits Checkbox and Slider classes*/
 class Settings : public Input, public Checkbox, public Slider
 {
 private:
@@ -90,7 +90,7 @@ private:
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
 
-	Checkbox copy = Checkbox("");
+	Checkbox copy = Checkbox("");	//Copu constructor used to initailize checkboxes, could be a pointer
 
 	Checkbox mute, replay, progressBar;
 
@@ -109,22 +109,33 @@ public:
 	Settings(){}
 	Settings(int _width, int _hight);
 	~Settings();
-
+	/**Draws all elements of Settings class and calls inherited classes draw() methods*/
 	void draw(sf::RenderWindow& window);
+	/**Inherited method from Slider class*/
 	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
+	/**Checks whether the mouse is in bounding box of the slider*/
 	int checkForBounds(sf::RenderWindow& window);
+	/**Inherited method from Slider class*/
 	bool activateSlider(sf::RenderWindow& window);
+	/**Inherited method from Slider class*/
 	void deactivateSlider();
+	/**Inherited method from Slider class*/
 	bool getSliderStatus();
+	/**Sets flag to false for mouse activation*/
 	void deactivateClick();
+	/**Returns checkbox state*/
 	bool getCheckboxStatus(int i);
+	/**Sets checkbox state*/
 	void setCheckboxStatus(int i, bool state);
+	/**Inherited method from Slider class*/
 	sf::Vector2f getCirclePosition();
+	/**Updates Volume value of in the interface*/
 	void updateInterface();
 
 	
 	/**
 	* calculates volume out of slider position from 0 to 100
+	* Returns
 	* 0 for music volume
 	* 1 for sfx volume
 	*/

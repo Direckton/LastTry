@@ -122,9 +122,7 @@ void Settings::draw(sf::RenderWindow& window)
 	window.draw(volumeValue);
 	volSlider.draw(window);
 	sfxSlider.draw(window);
-	/*mute.draw(window);
-	replay.draw(window);
-	progressBar.draw(window);*/
+
 	for (int i = 0; i < 3; i++)
 	{
 		checkbox[i].draw(window);
