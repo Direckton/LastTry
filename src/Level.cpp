@@ -690,7 +690,7 @@ void Level::blockColision()
 	{
 		if (player.getBounds().intersects((*it)->getBounds()))
 		{
-			//i dont like how it's made but i have no ide how to change it
+			//i dont like how it's made but i have no idea how to change it
 			//without changing all the objects
 			if (!player.getOnGround() &&
 				(*it)->getBounds().top > player.getBounds().top &&

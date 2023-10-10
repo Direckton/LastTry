@@ -6,7 +6,7 @@
 
 #define TICK_OFFSET 10
 
-
+/**Class for handling and drawing Chackboxes in setting menu*/
 class Checkbox
 {
 protected:
@@ -17,7 +17,7 @@ protected:
 	sf::Sprite s_tick;
 	std::string name;
 
-
+	/**Initial falue of chcckbox*/
 	bool check = false;
 public:
 	Checkbox() {};
@@ -31,28 +31,29 @@ public:
 		title.setString(_name);
 	}
 	~Checkbox() {};
-
+	/**Draws single checkbox on a screen*/
 	void draw(sf::RenderWindow& window);
-	void setSprite(sf::Texture& tx);
+	/**Changes checkbox state*/
 	void setStatus(bool state);
+	/**Self explanotary*/
 	bool getStatus();
-
-	sf::RectangleShape getShape();
+	/**Returns bounding box of chceckbox for detection when mouse is over it*/
+	sf::RectangleShape getBounds();
+	/**Self explanotary*/
 	void setPosition(int x, int y);
 
-	sf::FloatRect getBounds();
 };
 
+/**Class for handling and drawing Sliders in setting menu*/
 class Slider
 {
-	//TODO move slider into this object
 protected:
 	sf::CircleShape circle;
 	sf::RectangleShape bar, progress;
 
 	int width, height; //window size
 	int x, y; //x and y coordinates of the slider
-	int boundX, boundY;
+	int boundX, boundY; //max circle position
 
 	bool sliderActive = false;
 
@@ -61,13 +62,19 @@ public:
 	Slider(int _width, int _height, int _y);
 	~Slider(){}
 
+	/**Draws single slider on a screen*/
 	void draw(sf::RenderWindow& window);
+	/**Checks if mouse is in bounds, activates slider*/
 	bool activateSlider(sf::RenderWindow& window);
+	/**Changes position slider position, returns % of filled slider*/
 	int changeCirclePosition(int x, int y, sf::RenderWindow& window);
+	/**Self explanotary*/
 	sf::Vector2f getCirclePosition();
+	/**Returns wether slider is active or not*/
 	bool getSliderStatus();
+	/**Deactivates slider, the circle wont move anymore until it is activated again (changeCirclePosition() won't work)*/
 	void deactivateSlider();
-
+	/**Used for setting initial value based on variable*/
 	void setCirclePosition(int volume);
 
 
@@ -83,7 +90,7 @@ private:
 	sf::CircleShape circle;
 	sf::RectangleShape bar ,progress;
 
-	Checkbox copy = Checkbox("ASS");
+	Checkbox copy = Checkbox("");
 
 	Checkbox mute, replay, progressBar;
 

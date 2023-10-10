@@ -64,7 +64,7 @@ int Settings::checkForBounds(sf::RenderWindow &window)
 {
 	for (int i = 0; i < 3; i++)
 	{
-		if (checkbox[i].getShape().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
+		if (checkbox[i].getBounds().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))
 			&& !changeState)
 		{
 			changeState = true;
@@ -163,13 +163,6 @@ Checkbox::Checkbox(std::string name)
 }
 
 
-
-
-void Checkbox::setSprite(sf::Texture& tx)
-{
-	s_tick.setTexture(tx);
-}
-
 void Checkbox::draw(sf::RenderWindow& window)
 {
 	window.draw(box);
@@ -196,7 +189,7 @@ bool Checkbox::getStatus()
 	return check;
 }
 
-sf::RectangleShape Checkbox::getShape()
+sf::RectangleShape Checkbox::getBounds()
 {
 	return box;
 }
