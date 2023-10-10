@@ -133,13 +133,6 @@ void Selector::moveLeft()
 	}
 }
 
-void Selector::select()
-{
-
-	//spawn level
-	//levele itself handles fileloading
-}
-
 std::string Selector::getLevelName()
 {
 	return levelNames[levelInFocus];

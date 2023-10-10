@@ -3,7 +3,7 @@
 #include "InputHandler.h"
 
 #define MENU_ELEMENTS 3
-
+/**Main menu interface class*/
 class Menu : public Input
 {
 	sf::Text title, cursor, elements[MENU_ELEMENTS];
@@ -13,8 +13,12 @@ class Menu : public Input
 public:
 	Menu(){}
 	Menu(int _width, int _height);
+	/**Navigation*/
 	void moveUp();
+	/**Navigation*/
 	void moveDown();
+	/**Returns currently slected item*/
 	int getSelector();
+	/**Draws menu interface*/
 	void draw(sf::RenderWindow& window);
 };

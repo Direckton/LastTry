@@ -21,7 +21,9 @@ public:
 	void draw(sf::RenderWindow& window);
 	int getCenter();
 };
-
+/**Level Selector interface class
+This class takes vector of levels based on their name
+The name HAS TO BE IN UPPERCASE, it is a used font requirement*/
 class Selector : public Input
 {
 	LevelInstance *level;
@@ -37,11 +39,14 @@ public:
 	Selector() {};
 	Selector(int _width, int _height);
 
+	/**Draws Level Selector interface and calls each level draw() methode*/
 	void draw(sf::RenderWindow& window);
-
+	/** Moves the view in specified direction creating sliding effect*/
 	void switchLevel(int level, bool right, bool left);
+	/**Navigation*/
 	void moveRight();
+	/**Navigation*/
 	void moveLeft();
-	void select();
+	/**Self explanotary*/
 	std::string getLevelName();
 };
