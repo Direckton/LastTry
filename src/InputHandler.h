@@ -2,6 +2,7 @@
 #include "SFML/Window.hpp"
 #include <iostream>
 
+/**Sort of a controller in strategy design pattern*/
 class Input
 {
 public:
@@ -16,7 +17,7 @@ public:
 	virtual void escape() {}
 	virtual void space() {}
 
-
+	/**Calls correct overriden virtual method in currently active menu*/
 	int keyHandler(sf::Event& event);
 	
 };

@@ -9,10 +9,10 @@ Fileloader::Fileloader()
 {
 }
 
-json Fileloader::getJson( std::string name)
+json Fileloader::getJson( std::string path)
 {
 	json data;
-	std::ifstream fs(name);
+	std::ifstream fs(path);
 	if (fs.is_open())
 	{
 		data = json::parse(fs);

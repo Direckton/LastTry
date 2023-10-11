@@ -7,6 +7,7 @@
 
 namespace fs = std::filesystem;
 
+/**Class implementing single instance shown in LevelSelector*/
 class LevelInstance 
 {
 private:
@@ -15,10 +16,13 @@ private:
 	int width, height;
 public:
 	LevelInstance() {}
+	/**Constructor
+	offset is how far right this instance is shifted in px*/
 	LevelInstance(int _width, int _height, int _offset, std::string name);
 	~LevelInstance(){}
-
+	/**Draws single instance */
 	void draw(sf::RenderWindow& window);
+	/**Returns x coordinate of the center of this instance*/
 	int getCenter();
 };
 /**Level Selector interface class
