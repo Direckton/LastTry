@@ -14,7 +14,7 @@
 
 #define GRID 60
 #define FLOOR 600
-
+/**Class implmenting player and his logic */
 class Player
 {
 	sf::Sprite sprite;
@@ -24,6 +24,7 @@ class Player
 	bool onGround = true;
 	bool onBlock = true;
 	bool blownUp = false;
+	bool falling = false;
 
 	float pi = 3.14159265359f;
 	float yDelta = 0;
@@ -35,33 +36,38 @@ class Player
 
 
 public:
-	sf::RectangleShape playerBounds;
-
 	Player();
-	bool falling = false;
-	bool jumping = false;
-
 
 	void draw(sf::RenderWindow& window);
+	/**Switches flags for jumping based on conditions, flags are processed in update()*/
 	void jump();
+	/**Switches flags for jumping based on conditions, flags are processed in update()*/
 	void boost();
+	/**Switches flags for double jumps based on conditions, flags are processed in update()*/
 	void doubleJump();
+	/**Handling all the flags and movements of the player*/
 	void update();
+	/**Returns bounding box of player*/
 	sf::FloatRect getBounds();
+	/**Resets player after colision*/
 	void reset();
+	/**Sets flags, restes position to a block or a floor specified by y variable*/
 	void setOnGround(int y);
+	/**Returns flag*/
 	bool getOnGround();
-	void playerMove(float x, float y);
+	/**Sets flag whan player should fall down*/
 	void gravity();
-	//DEBUG
-	void changeColor(sf::Color color) { sprite.setColor(color); }
-	
+	/**Setup blowing up animation and flags*/
 	void InitalizeBlowUp();
+	/**Blowing up animation updater after colision*/
 	bool blowUp();
+	/**Self explanotary*/
 	bool getAnimationEnded();
+	/**Animation after crossing the finish line*/
 	void finishAnimation();
 };
 
+/**Block object*/
 class Block
 {
 	//sf::RectangleShape rectangle;
@@ -74,10 +80,13 @@ class Block
 public:
 	Block(int x, int y, const sf::Color& color);
 	~Block();
+	/**Draws single block on the screen*/
 	void draw(sf::RenderWindow& window);
+	/**Returns bounding box of a block*/
 	sf::FloatRect getBounds();
 };
 
+/**Spike object*/
 class Spike
 {
 	int x, y;
@@ -91,11 +100,13 @@ class Spike
 public:
 	Spike();
 	Spike(int _x, int _y, sf::Color color);
-
+	/**Draws single spike on the screen*/
 	void draw(sf::RenderWindow& window);
+	/**Returns bounding box of a spike*/
 	sf::FloatRect getBounds();
 };
 
+/**Finish line object*/
 class Finish
 {
 	int x;
@@ -108,7 +119,9 @@ public:
 	~Finish() {};
 
 	float getFinishPosition();
+	/**Draws finish line on the screen*/
 	void draw(sf::RenderWindow& window);
+	/**Returns bounding box of a finish line*/
 	sf::FloatRect getBounds();
 };
 
@@ -128,6 +141,7 @@ public:
 	void draw(sf::RenderWindow &window);
 };
 
+/**Booster object*/
 class Booster
 {
 	int x, y;
@@ -141,13 +155,15 @@ public:
 	Booster() {};
 	Booster(int _x, int _y);
 	~Booster();
-
+	/**Draws single booster on the screen*/
 	void draw(sf::RenderWindow& window);
+	/**Returns bounding box of a booster*/
 	sf::FloatRect getBounds();
 
 
 };
 
+/**Double jump object*/
 class Double
 {
 	int x, y;
@@ -161,13 +177,15 @@ public:
 	Double() {};
 	Double(int _x, int _y);
 	~Double();
-
+	/**Draws single double jump element on the screen*/
 	void draw(sf::RenderWindow& window);
+	/**Returns bounding box of a double jump*/
 	sf::FloatRect getBounds();
 
 
 };
 
+/**Class implementing level logic, grapical interface and */
 class Level : public Input
 {
 	std::string levelName;
@@ -223,13 +241,21 @@ public:
 	Level(std::string name);
 	~Level();
 
+	/**Loads level data from json, crates blocks, spikes etc., test colors, plays music*/
 	void loadLevel();
+	/**Creates objects from coordinates, asigns colors*/
 	void loadBlocks(std::vector<std::pair<int, int>> coordinates, sf::Color c);
+	/**Creates objects from coordinates, asigns colors*/
 	void loadSpikes(std::vector<std::pair<int, int>> coordinates, sf::Color c);
+	/**Creates objects from coordinates*/
 	void loadBoosters(std::vector<std::pair<int, int>> coordinates);
+	/**Creates objects from coordinates*/
 	void loadDoubles(std::vector<std::pair<int, int>> coordinates);
+	/**Calls for update, then dynamically darws all the elements by calling their methods*/
 	void draw(sf::RenderWindow& window);
+	/**Sets event queue and calls jump() methode from Player class*/
 	void space();
+
 	void update();
 	bool finished();
 	void reset();

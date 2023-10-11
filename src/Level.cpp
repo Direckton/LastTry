@@ -5,13 +5,9 @@ Player::Player()
 	texture.loadFromFile("res/player.png");
 	
 	sprite.setTexture(texture);
-	//sprite.setOrigin(sf::Vector2f(30, 30));
 	sprite.setPosition(sf::Vector2f(20.f, FLOOR-GRID +
 	sprite.getOrigin().y));
 
-	//sprite.setPosition(sprite.getPosition().x, -20);
-	playerBounds.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
-		sprite.getOrigin().y));
 	yAcceleration = 0.5f;
 	yVelocity = 0;
 
@@ -19,7 +15,6 @@ Player::Player()
 
 void Player::draw(sf::RenderWindow& window)
 {
-	//update();
 	window.draw(circle);
 	window.draw(sprite);
 }
@@ -101,9 +96,6 @@ void Player::update()
 			setOnGround(FLOOR-GRID);
 		}
 	}
-	
-	
-
 }
 
 bool Player::getAnimationEnded()
@@ -130,10 +122,6 @@ sf::FloatRect Player::getBounds()
 	return sprite.getGlobalBounds();
 }
 
-void Player::playerMove(float x, float y)
-{
-	sprite.move(x, y);
-}
 
 void Player::InitalizeBlowUp()
 {
