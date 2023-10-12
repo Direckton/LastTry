@@ -15,8 +15,7 @@
 
 using namespace sf;
 
-
-
+/**Setup of baseline parameters and main SFML loop and event handling*/
 int main()
 {
 
@@ -95,7 +94,7 @@ int main()
 
 
         //Update
-        if (controller.updateClose())
+        if (controller.getClose())
         {
             //TODO closing procedure: saving progress etc and replace close()
             window.close();

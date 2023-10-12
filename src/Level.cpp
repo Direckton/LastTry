@@ -517,24 +517,20 @@ void Level::loadDoubles(std::vector<std::pair<int, int>> coordinates)
 
 }
 
-std::barrier bar(2);
-
-
 void Level::drawBlocks(sf::RenderWindow &window )
 {
 	for (auto it = blocks.begin(); it != blocks.end(); it++)
 	{
 		(*it)->draw(window);
 	}
-	bar.arrive();
 }
+
 void Level::drawSpikes(sf::RenderWindow& window)
 {
 	for (auto it = spikes.begin(); it != spikes.end(); it++)
 	{
 		(*it)->draw(window);
 	}
-	bar.arrive();
 }
 
 void Level::draw(sf::RenderWindow& window)

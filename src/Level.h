@@ -185,7 +185,7 @@ public:
 
 };
 
-/**Class implementing level logic, grapical interface and */
+/**Class implementing level logic, grapical interface and colision detection*/
 class Level : public Input
 {
 	std::string levelName;
@@ -251,18 +251,27 @@ public:
 	void loadBoosters(std::vector<std::pair<int, int>> coordinates);
 	/**Creates objects from coordinates*/
 	void loadDoubles(std::vector<std::pair<int, int>> coordinates);
-	/**Calls for update, then dynamically darws all the elements by calling their methods*/
+	/**Calls for update, then dynamically darws all the elements by calling their methods
+	Updates view as well*/
 	void draw(sf::RenderWindow& window);
 	/**Sets event queue and calls jump() methode from Player class*/
 	void space();
-
+	/**Method updating everyting in the scene, handling flags, event queues,
+	calling colision detection and moving textures*/
 	void update();
+	/**Checks if player has crossed the finish line, returns true if he has*/
 	bool finished();
+	/**Sets flag, restarts soundtack*/
 	void reset();
+	/**If player highscore was grater than the best one, saves it into JSON file*/
 	void saveScore();
+	/**Detects colision with blocks in range, blocks impossible to hit are not being checked*/
 	void blockColision();
+	/**Detects colision with spikes in range, spikes impossible to hit are not being checked*/
 	void spikeColision();
+	/**Draws blocks*/
 	void drawBlocks(sf::RenderWindow& window);
+	/**Draws spikes*/
 	void drawSpikes(sf::RenderWindow& window);
 };
 
