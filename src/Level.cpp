@@ -151,17 +151,18 @@ bool Player::blowUp()
 				circle.getFillColor().b,
 				circle.getFillColor().a - 5));
 
+			return false;
 		}
-		else
-		{
-			circle.setFillColor(sf::Color::Transparent);
-			blownUp = false;
-			sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
-				sprite.getOrigin().y));
-			sprite.setRotation(0);
-			sprite.setScale(sf::Vector2f(1, 1));
-			return true;
-		}
+
+		
+		circle.setFillColor(sf::Color::Transparent);
+		blownUp = false;
+		sprite.setPosition(sf::Vector2f(20.f, FLOOR - GRID +
+			sprite.getOrigin().y));
+		sprite.setRotation(0);
+		sprite.setScale(sf::Vector2f(1, 1));
+		return true;
+	
 	}
 	return false;
 }
@@ -709,7 +710,17 @@ void Level::blockColision()
 
 void Level::spikeColision()
 {
+	std::vector<Spike*> vec;
+
 	for (auto it = spikes.begin(); it != spikes.end(); it++)
+	{
+		if ((*it)->getBounds().left < view.getCenter().x + 100 &&
+			(*it)->getBounds().left > view.getCenter().x - 600)
+		{
+			vec.push_back(*it);
+		}
+	}
+	for (auto it = vec.begin(); it != vec.end(); it++)
 	{
 		if (player.getBounds().intersects((*it)->getBounds()))
 		{
